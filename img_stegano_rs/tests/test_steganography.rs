@@ -34,3 +34,15 @@ fn test_encode_and_decode_from_u8_array() {
         ImgStegano::decode_from_u8_array(&decoded_buffer).expect("Failed to decode image");
     assert_eq!(decoded, "foo bar".to_string());
 }
+
+#[test]
+fn test_encode_and_decode_from_path() {
+    let encoded = ImgStegano::encode_from_path("dice.png", "foo bar")
+        .expect("Failed to encode text to image");
+    encoded
+        .save_with_format("out3.png", image::ImageFormat::Png)
+        .expect("Failed to save image");
+    let decoded_text =
+        ImgStegano::decode_from_path("out3.png").expect("Failed to decode text from image");
+    assert_eq!(decoded_text, "foo bar".to_string());
+}
