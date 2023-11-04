@@ -1,4 +1,5 @@
 [workspace]
 members = [
-	"img_stegano_rs"
+	"img_stegano_rs",
+	"img_stegano_wasm"
 ]

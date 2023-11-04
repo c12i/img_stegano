@@ -1,4 +1,43 @@
+use std::path::PathBuf;
+
+use error::ImgSteganoError;
 use image::{DynamicImage, GenericImage, GenericImageView, Pixel, Rgba};
+
+mod error;
+
+pub struct ImgStegano;
+
+impl ImgStegano {
+    pub fn encode_from_u8_array(
+        input_image: &[u8],
+        message: &str,
+    ) -> Result<Vec<u8>, ImgSteganoError> {
+        let image = image::load_from_memory(input_image)?;
+        let encoded_image = encode_text(&image, message);
+        Ok(encoded_image.as_bytes().to_vec())
+    }
+
+    pub fn encode_from_path<T: Into<PathBuf>>(
+        image_path: T,
+        message: &str,
+    ) -> Result<DynamicImage, ImgSteganoError> {
+        let image = image::open(image_path.into())?;
+        let encoded_image = encode_text(&image, message);
+        Ok(encoded_image)
+    }
+
+    pub fn decode_from_u8_array(input_image: &[u8]) -> Result<String, ImgSteganoError> {
+        let image = image::load_from_memory(input_image)?;
+        let decoded = decode_text(&image);
+        Ok(decoded)
+    }
+
+    pub fn decode_from_path<T: Into<PathBuf>>(image_path: T) -> Result<String, ImgSteganoError> {
+        let image = image::open(image_path.into())?;
+        let decoded = decode_text(&image);
+        Ok(decoded)
+    }
+}
 
 pub fn encode_text(input_image: &DynamicImage, message: &str) -> DynamicImage {
     let mut output_image = input_image.clone();
