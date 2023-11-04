@@ -50,8 +50,7 @@ pub fn encode_text(input_image: &DynamicImage, message: &str) -> DynamicImage {
     let message = message
         .as_bytes()
         .iter()
-        .map(|v| format!("{:08b}", v))
-        .collect::<String>();
+        .fold(String::new(), |acc, &byte| acc + &format!("{:08b}", byte));
     let (width, height) = output_image.dimensions();
     let mut message = message.chars();
 
