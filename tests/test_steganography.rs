@@ -1,5 +1,5 @@
 use image::open;
-use steganography_rust::{decode_text, encode_text};
+use img_stegano_rs::{decode_text, encode_text};
 
 #[test]
 fn it_works() {
