@@ -1,20 +1,26 @@
 mod error;
 
-use std::path::PathBuf;
+use std::{io::Cursor, path::PathBuf};
 
 use error::ImgSteganoError;
-use image::{DynamicImage, GenericImage, GenericImageView, Pixel, Rgba};
+use image::{DynamicImage, GenericImage, GenericImageView, ImageFormat, Pixel, Rgba};
 
 pub struct ImgStegano;
 
 impl ImgStegano {
     pub fn encode_from_u8_array(
         input_image: &[u8],
+        image_extension: &str,
         message: &str,
     ) -> Result<Vec<u8>, ImgSteganoError> {
-        let image = image::load_from_memory(input_image)?;
+        let image = image::load_from_memory_with_format(input_image, image::ImageFormat::Png)?;
         let encoded_image = encode_text(&image, message);
-        Ok(encoded_image.as_bytes().to_vec())
+        let mut encoded: Vec<u8> = Vec::new();
+        let mut cursor = Cursor::new(&mut encoded);
+        let image_format = ImageFormat::from_extension(image_extension)
+            .ok_or(ImgSteganoError::InvalidImageFormat)?;
+        encoded_image.write_to(&mut cursor, image_format)?;
+        Ok(encoded)
     }
 
     pub fn encode_from_path<T: Into<PathBuf>>(
@@ -27,7 +33,7 @@ impl ImgStegano {
     }
 
     pub fn decode_from_u8_array(input_image: &[u8]) -> Result<String, ImgSteganoError> {
-        let image = image::load_from_memory(input_image)?;
+        let image = image::load_from_memory_with_format(input_image, image::ImageFormat::Png)?;
         let decoded = decode_text(&image);
         Ok(decoded)
     }
