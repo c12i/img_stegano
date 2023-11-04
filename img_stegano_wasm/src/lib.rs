@@ -1,5 +1,3 @@
-mod utils;
-
 use img_stegano_rs::ImgStegano;
 use wasm_bindgen::prelude::*;
 
