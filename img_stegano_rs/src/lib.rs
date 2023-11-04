@@ -1,9 +1,9 @@
+mod error;
+
 use std::path::PathBuf;
 
 use error::ImgSteganoError;
 use image::{DynamicImage, GenericImage, GenericImageView, Pixel, Rgba};
-
-mod error;
 
 pub struct ImgStegano;
 
