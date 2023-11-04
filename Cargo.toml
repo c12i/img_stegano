@@ -1,5 +1,16 @@
+[package]
+name = "img_stegano_rs"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "./src/lib.rs"
+
 [workspace]
 members = [
 	"img_stegano_rs",
 	"img_stegano_wasm"
 ]
+
+[dependencies]
+img_stegano_rs_lib = {path = "./img_stegano_rs"}

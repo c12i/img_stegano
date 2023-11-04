@@ -1,7 +1,7 @@
 use std::{fs::File, io::Read};
 
 use image::open;
-use img_stegano_rs::{decode_text, encode_text, ImgStegano};
+use img_stegano_rs_lib::{decode_text, encode_text, ImgStegano};
 
 #[test]
 fn test_encode_and_decode_text() {
