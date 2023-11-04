@@ -2,7 +2,7 @@ mod error;
 
 use std::{io::Cursor, path::PathBuf};
 
-use error::ImgSteganoError;
+pub use error::ImgSteganoError;
 use image::{DynamicImage, GenericImage, GenericImageView, ImageFormat, Pixel, Rgba};
 
 pub struct ImgStegano;
