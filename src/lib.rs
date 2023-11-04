@@ -1,67 +1,60 @@
-use image::{DynamicImage, Pixel, Rgba};
+use image::{DynamicImage, GenericImage, GenericImageView, Pixel, Rgba};
 
-pub fn encode_text<'a>(
-    image: &'a mut DynamicImage,
-    text: &'a str,
-) -> Result<&'a DynamicImage, String> {
-    let (height, width) = (image.height(), image.width());
-    let pixels = image.as_mut_rgba8().unwrap();
-    let bytes = text.as_bytes();
-    let mut data_index = 0;
+pub fn encode_text(input_image: &DynamicImage, message: &str) -> DynamicImage {
+    let mut output_image = input_image.clone();
+    let message = message
+        .as_bytes()
+        .iter()
+        .map(|v| format!("{:08b}", v))
+        .collect::<String>();
+    let (width, height) = output_image.dimensions();
+    let mut message = message.chars();
 
     for y in 0..height {
         for x in 0..width {
-            if data_index < bytes.len() {
-                let pixel = pixels.get_pixel(x, y);
-                let (r, g, b, mut a) = pixel.channels4();
-
-                let bit = (bytes[data_index] >> 7) & 1;
-                a = (a & 0xFE) | bit;
-
-                let new_pixel = Rgba([r, g, b, a]);
-                pixels.put_pixel(x, y, new_pixel);
-
-                data_index += 1;
-            } else {
-                break;
-            }
-        }
-    }
-
-    if data_index < bytes.len() {
-        return Err("Insufficient image size to encode the data.".to_string());
-    }
-
-    Ok(image)
-}
-
-pub fn decode_text(image: &DynamicImage) -> String {
-    let pixels = image.as_rgba8().unwrap();
-    let mut decoded_data = Vec::new();
-    let mut byte = 0;
-    let mut data_index = 0;
-
-    for y in 0..image.height() {
-        for x in 0..image.width() {
-            if data_index < 8 {
-                let pixel = pixels.get_pixel(x, y);
-                let (_, _, _, a) = pixel.channels4();
-                byte = (byte << 1) | (a & 1);
-
-                if x % 8 == 7 {
-                    decoded_data.push(byte);
-                    byte = 0;
-                    data_index += 1;
+            let pixel = output_image.get_pixel(x, y);
+            let mut rgba = pixel.to_rgba();
+            let message_bit = message.next();
+            if let Some(bit) = message_bit {
+                if let Some(lsb) = bit.to_digit(2) {
+                    let lsb = lsb as u8;
+                    rgba.0[0] = (rgba.0[0] & 0xFE) | lsb;
+                    output_image.put_pixel(x, y, Rgba(rgba.0));
                 }
             } else {
-                break;
+                break; // All message bits have been encoded
             }
         }
-        if data_index >= 8 {
-            break;
+    }
+    output_image
+}
+
+pub fn decode_text(encoded_image: &DynamicImage) -> String {
+    let (width, height) = encoded_image.dimensions();
+    let mut binary_message = String::new();
+    let mut current_byte = 0u8;
+    let mut bit_count = 0;
+
+    for y in 0..height {
+        for x in 0..width {
+            let pixel = encoded_image.get_pixel(x, y);
+            let rgba = pixel.to_rgba();
+            let lsb = rgba.0[0] & 1;
+            current_byte = (current_byte << 1) | lsb;
+            bit_count += 1;
+            if bit_count == 8 {
+                if current_byte == 0 {
+                    break; // End of message
+                }
+                binary_message.push(current_byte as char);
+                current_byte = 0u8;
+                bit_count = 0;
+            }
+        }
+        if current_byte == 0 {
+            break; // End of message
         }
     }
 
-    let decoded_text = String::from_utf8_lossy(&decoded_data).into_owned();
-    decoded_text
+    binary_message
 }
