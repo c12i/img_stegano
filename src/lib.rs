@@ -34,7 +34,6 @@ pub fn decode_text(encoded_image: &DynamicImage) -> String {
     let mut binary_message = String::new();
     let mut current_byte = 0u8;
     let mut bit_count = 0;
-
     for y in 0..height {
         for x in 0..width {
             let pixel = encoded_image.get_pixel(x, y);
@@ -55,6 +54,5 @@ pub fn decode_text(encoded_image: &DynamicImage) -> String {
             break; // End of message
         }
     }
-
     binary_message
 }
