@@ -8,6 +8,7 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 #[structopt(about = "image steganography cli")]
 enum ImgSteganoCliArgs {
+    #[structopt(about = "encode text to image")]
     Encode {
         #[structopt(name = "input", long, short, parse(from_os_str))]
         input_path: PathBuf,
@@ -18,6 +19,7 @@ enum ImgSteganoCliArgs {
         #[structopt(long, short)]
         message: String,
     },
+    #[structopt(about = "decode text from image")]
     Decode {
         #[structopt(name = "input", long, short, parse(from_os_str))]
         input_path: PathBuf,
