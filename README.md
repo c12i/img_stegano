@@ -103,5 +103,25 @@ fn main() {
 }
 ```
 
+## cli
+
+You can interact with this program via your command line by installing via cargo:
+
+```sh
+cargo install --git https://github.com/collinsmuriuki/img_stegano.git
+```
+
+Encode:
+
+```sh
+img_stegano_cli encode --input "dice.png" --output "out.png" --message "foo bar" --fmt "png"
+```
+
+Decode:
+
+```sh
+img_stegano_cli decode --input "out.png"
+```
+
 ## License
 This library is licensed under the [MIT License](./LICENSE). Feel free to contribute, report issues, or suggest improvements. Enjoy using ImgStegano for image steganography!
