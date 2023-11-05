@@ -1,16 +1,15 @@
 use std::{fs::File, io::Read};
 
-use img_stegano_core::image::{load_from_memory_with_format, open, ImageFormat};
-use img_stegano_core::ImgStegano;
+use img_stegano_core::{Image, ImageFormat, ImgStegano};
 
 #[test]
 fn test_encode_and_decode_from_image() {
-    let image = open("dice.png").expect("failed to open image");
-    let encoded = ImgStegano::encode_from_image(&image, "foo bar");
+    let image = Image::open("dice.png").expect("failed to open image");
+    let encoded = ImgStegano::encode_from_image(image, "foo bar");
     encoded
-        .save_with_format("out.png", ImageFormat::Png)
+        .save("out.png", ImageFormat::Png)
         .expect("Failed to save out.png");
-    let encoded = open("out.png").expect("Failed to open encoded out.png file");
+    let encoded = Image::open("out.png").expect("Failed to open image");
     let decoded_text = ImgStegano::decode_from_image(&encoded);
     assert_eq!(decoded_text, "foo bar".to_string());
 }
@@ -22,10 +21,10 @@ fn test_encode_and_decode_from_u8_array() {
     file.read_to_end(&mut buffer).unwrap();
     let encoded = ImgStegano::encode_from_u8_array(&buffer, "png", "foo bar")
         .expect("Failed to encode message to image");
-    let encoded =
-        load_from_memory_with_format(&encoded, ImageFormat::Png).expect("Failed to load image");
+    let encoded = Image::open_from_u8_array(&encoded, ImageFormat::Png)
+        .expect("Failed to open image from buffer");
     encoded
-        .save_with_format("out2.png", ImageFormat::Png)
+        .save("out2.png", ImageFormat::Png)
         .expect("Failed to save out2.png");
     let mut decoded = File::open("out2.png").expect("Failed to open input file");
     let mut decoded_buffer = Vec::new();
@@ -40,8 +39,8 @@ fn test_encode_and_decode_from_path() {
     let encoded = ImgStegano::encode_from_path("dice.png", "foo bar")
         .expect("Failed to encode text to image");
     encoded
-        .save_with_format("out3.png", ImageFormat::Png)
-        .expect("Failed to save image");
+        .save("out3.png", ImageFormat::Png)
+        .expect("Failed to save out3.png");
     let decoded_text =
         ImgStegano::decode_from_path("out3.png").expect("Failed to decode text from image");
     assert_eq!(decoded_text, "foo bar".to_string());

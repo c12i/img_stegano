@@ -3,13 +3,13 @@ mod error;
 use std::{io::Cursor, path::PathBuf};
 
 pub use error::ImgSteganoError;
-pub use image;
-use image::{DynamicImage, GenericImage, GenericImageView, ImageFormat, Pixel, Rgba};
+pub use image::ImageFormat;
+use image::{DynamicImage, GenericImage, GenericImageView, Pixel, Rgba};
 
 pub struct ImgStegano;
 
 impl ImgStegano {
-    pub fn encode_from_image(input_image: &DynamicImage, message: &str) -> DynamicImage {
+    pub fn encode_from_image(Image(input_image): Image, message: &str) -> Image {
         let mut output_image = input_image.clone();
         let message = message
             .as_bytes()
@@ -34,7 +34,7 @@ impl ImgStegano {
                 }
             }
         }
-        output_image
+        output_image.into()
     }
 
     pub fn encode_from_u8_array(
@@ -45,7 +45,8 @@ impl ImgStegano {
         let image_format = ImageFormat::from_extension(image_extension)
             .ok_or(ImgSteganoError::InvalidImageFormat)?;
         let image = image::load_from_memory_with_format(input_image, image_format)?;
-        let encoded_image = Self::encode_from_image(&image, message);
+        let encoded_image = Self::encode_from_image(image.into(), message);
+        let Image(encoded_image) = encoded_image;
         let mut encoded: Vec<u8> = Vec::new();
         let mut cursor = Cursor::new(&mut encoded);
         encoded_image.write_to(&mut cursor, image_format)?;
@@ -55,13 +56,13 @@ impl ImgStegano {
     pub fn encode_from_path<T: Into<PathBuf>>(
         image_path: T,
         message: &str,
-    ) -> Result<DynamicImage, ImgSteganoError> {
+    ) -> Result<Image, ImgSteganoError> {
         let image = image::open(image_path.into())?;
-        let encoded_image = Self::encode_from_image(&image, message);
+        let encoded_image = Self::encode_from_image(image.into(), message);
         Ok(encoded_image)
     }
 
-    pub fn decode_from_image(encoded_image: &DynamicImage) -> String {
+    pub fn decode_from_image(Image(encoded_image): &Image) -> String {
         let (width, height) = encoded_image.dimensions();
         let mut binary_message = String::new();
         let mut current_byte = 0u8;
@@ -92,13 +93,39 @@ impl ImgStegano {
 
     pub fn decode_from_u8_array(input_image: &[u8]) -> Result<String, ImgSteganoError> {
         let image = image::load_from_memory_with_format(input_image, image::ImageFormat::Png)?;
-        let decoded = Self::decode_from_image(&image);
+        let decoded = Self::decode_from_image(&image.into());
         Ok(decoded)
     }
 
     pub fn decode_from_path<T: Into<PathBuf>>(image_path: T) -> Result<String, ImgSteganoError> {
         let image = image::open(image_path.into())?;
-        let decoded = Self::decode_from_image(&image);
+        let decoded = Self::decode_from_image(&image.into());
         Ok(decoded)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Image(DynamicImage);
+
+impl Image {
+    pub fn open(path: &str) -> Result<Self, ImgSteganoError> {
+        let image = image::open(path)?;
+        Ok(Image(image))
+    }
+
+    pub fn open_from_u8_array(buf: &[u8], format: ImageFormat) -> Result<Self, ImgSteganoError> {
+        let image = image::load_from_memory_with_format(buf, format)?;
+        Ok(Image(image))
+    }
+
+    pub fn save(&self, path: &str, format: ImageFormat) -> Result<(), ImgSteganoError> {
+        self.0.save_with_format(path, format)?;
+        Ok(())
+    }
+}
+
+impl From<DynamicImage> for Image {
+    fn from(value: DynamicImage) -> Self {
+        Image(value)
     }
 }
