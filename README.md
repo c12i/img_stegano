@@ -1,4 +1,4 @@
-# img_stegano_rs
+# img_stegano
 Image steganography with Rust
 
 ## Introduction
@@ -15,11 +15,11 @@ See [this whitepaper](https://core.ac.uk/download/pdf/235050007.pdf) for referen
 
 ## Usage
 
-1. Add `img_stegano_rs`, `git` dependency in your `Cargo.toml`.
+1. Add `img_stegano`, `git` dependency in your `Cargo.toml`.
 
 ```toml
 [dependencies]
-img_stegano_rs = {git = "https://github.com/collinsmuriuki/img_stegano_rs.git"}
+img_stegano = {git = "https://github.com/collinsmuriuki/img_stegano.git"}
 ```
 
 2. Import the `ImgStegano` to use as demonstrated in the following example:
@@ -27,15 +27,15 @@ img_stegano_rs = {git = "https://github.com/collinsmuriuki/img_stegano_rs.git"}
 `encode_from_image`: Encode and decode from [`DynamicImage`](https://creative-coding-the-hard-way.github.io/Agents/image/enum.DynamicImage.html)
 
 ```rust,no_run
-use img_stegano_rs::ImgStegano;
+use img_stegano::ImgStegano;
 
 fn main() {
-    let image = img_stegano_rs::image::open("dice.png").expect("failed to open image");
+    let image = img_stegano::image::open("dice.png").expect("failed to open image");
     let encoded = ImgStegano::encode_from_image(&image, "foo bar");
     encoded
-        .save_with_format("out.png", img_stegano_rs::image::ImageFormat::Png)
+        .save_with_format("out.png", img_stegano::image::ImageFormat::Png)
         .expect("Failed to save out.png");
-    let encoded = img_stegano_rs::image::open("out.png").expect("Failed to open encoded out.png file");
+    let encoded = img_stegano::image::open("out.png").expect("Failed to open encoded out.png file");
     let decoded_text = ImgStegano::decode_from_image(&encoded);
     println!("{decoded_text}");
     assert_eq!(decoded_text, "foo bar".to_string());
@@ -46,7 +46,7 @@ fn main() {
 
 ```rust,no_run
 use std::{fs::File, io::Read};
-use img_stegano_rs::ImgStegano;
+use img_stegano::ImgStegano;
 
 fn main() {
     // Load the input image
@@ -57,12 +57,12 @@ fn main() {
     // encode from buffer
     let encoded = ImgStegano::encode_from_u8_array(&buffer, "png", "foo bar")
         .expect("Failed to encode message to image");
-    let encoded = img_stegano_rs::image::load_from_memory_with_format(&encoded, img_stegano_rs::image::ImageFormat::Png)
+    let encoded = img_stegano::image::load_from_memory_with_format(&encoded, img_stegano::image::ImageFormat::Png)
         .expect("Failed to load image");
     
     // save encoded file
     encoded
-        .save_with_format("out2.png", img_stegano_rs::image::ImageFormat::Png)
+        .save_with_format("out2.png", img_stegano::image::ImageFormat::Png)
         .expect("Failed to save out2.png");
 
     // decode saved encoded file
@@ -80,7 +80,7 @@ fn main() {
 `encode_from_path`: Encode and decode from path
 
 ```rust,no_run
-use img_stegano_rs::ImgStegano;
+use img_stegano::ImgStegano;
 
 fn main() {
     // encode from file path
@@ -88,7 +88,7 @@ fn main() {
         .expect("Failed to encode text to image");
     // save encoded file
     encoded
-        .save_with_format("out3.png", img_stegano_rs::image::ImageFormat::Png)
+        .save_with_format("out3.png", img_stegano::image::ImageFormat::Png)
         .expect("Failed to save image");
     // decode from saved encoded file path
     let decoded_text =

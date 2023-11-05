@@ -1,7 +1,7 @@
 use std::{fs::File, io::Read};
 
-use img_stegano_rs_lib::image::{load_from_memory_with_format, open, ImageFormat};
-use img_stegano_rs_lib::ImgStegano;
+use img_stegano_core::image::{load_from_memory_with_format, open, ImageFormat};
+use img_stegano_core::ImgStegano;
 
 #[test]
 fn test_encode_and_decode_from_image() {

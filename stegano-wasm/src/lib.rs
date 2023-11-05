@@ -1,4 +1,4 @@
-use img_stegano_rs::ImgStegano;
+use img_stegano::ImgStegano;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
