@@ -1,14 +1,14 @@
 use std::{fs::File, io::Read};
 
-use image::open;
+use img_stegano_rs_lib::image::{load_from_memory_with_format, open, ImageFormat};
 use img_stegano_rs_lib::ImgStegano;
 
 #[test]
-fn test_encode_and_decode_text() {
+fn test_encode_and_decode_from_image() {
     let image = open("dice.png").expect("failed to open image");
     let encoded = ImgStegano::encode_from_image(&image, "foo bar");
     encoded
-        .save_with_format("out.png", image::ImageFormat::Png)
+        .save_with_format("out.png", ImageFormat::Png)
         .expect("Failed to save out.png");
     let encoded = open("out.png").expect("Failed to open encoded out.png file");
     let decoded_text = ImgStegano::decode_from_image(&encoded);
@@ -22,10 +22,10 @@ fn test_encode_and_decode_from_u8_array() {
     file.read_to_end(&mut buffer).unwrap();
     let encoded = ImgStegano::encode_from_u8_array(&buffer, "png", "foo bar")
         .expect("Failed to encode message to image");
-    let encoded = image::load_from_memory_with_format(&encoded, image::ImageFormat::Png)
-        .expect("Failed to load image");
+    let encoded =
+        load_from_memory_with_format(&encoded, ImageFormat::Png).expect("Failed to load image");
     encoded
-        .save_with_format("out2.png", image::ImageFormat::Png)
+        .save_with_format("out2.png", ImageFormat::Png)
         .expect("Failed to save out2.png");
     let mut decoded = File::open("out2.png").expect("Failed to open input file");
     let mut decoded_buffer = Vec::new();
@@ -40,7 +40,7 @@ fn test_encode_and_decode_from_path() {
     let encoded = ImgStegano::encode_from_path("dice.png", "foo bar")
         .expect("Failed to encode text to image");
     encoded
-        .save_with_format("out3.png", image::ImageFormat::Png)
+        .save_with_format("out3.png", ImageFormat::Png)
         .expect("Failed to save image");
     let decoded_text =
         ImgStegano::decode_from_path("out3.png").expect("Failed to decode text from image");

@@ -8,37 +8,89 @@ See [this whitepaper](https://core.ac.uk/download/pdf/235050007.pdf) for referen
 
 ## Features
 
-- **Encoding Function**: You can use the `encode_text` function to embed a text message into an image using LSB replacement. The input image remains visually similar, with the hidden message stored in the least significant bits of the red channel.
+- **Encoding Functions**: You can use the `encode_from_u8_array`, `encode_from_path` or `encode_from_image` functions to embed a text message into an image using LSB replacement. The output image remains visually similar, with the hidden message stored in the least significant bits of the red channel.
 
-- **Decoding Function**: The `decode_text` function allows you to extract the hidden message from an encoded image.
+- **Decoding Functions**: The `decode_from_u8_array`, `decode_from_path`, `decode_from_image` function allows you to extract the hidden message from an encoded image.
 
 ## Usage
 
-1. Add `img_stegano_rs` and `image` as a `git` dependency in your `Cargo.toml`.
+1. Add `img_stegano_rs`, `git` dependency in your `Cargo.toml`.
 
 ```toml
 [dependencies]
 img_stegano_rs = {git = "https://github.com/collinsmuriuki/img_stegano_rs.git"}
-image = "0.24.7"
 ```
 
-2. Import the required libraries and use the functions `encode_text` and `decode_text` as demonstrated in the following example:
+2. Import the `ImgStegano` to use as demonstrated in the following example:
+
+Encode and decode from `u8` array
 
 ```rust
-use img_stegano_rs::{encode_text, decode_text};
+use img_stegano_rs::ImgStegano;
 
 fn main() {
     // Load the input image
-    let input_image = image::open("input.png").unwrap();
-    
-    // Encode a message and save the encoded image
-    let message = "This is a secret message!";
-    let encoded_image = encode_text(&input_image, message);
-    encoded_image.save("encoded.png").unwrap();
+  	let mut file = File::open("dice.png").expect("failed to open file");
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).unwrap();
 
-    // Decode the hidden message from the encoded image
-    let decoded_image = image::open("encoded.png").unwrap();
-    let decoded_message = decode_text(&decoded_image);
+		// encode from buffer
+    let encoded = ImgStegano::encode_from_u8_array(&buffer, "png", "foo bar")
+        .expect("Failed to encode message to image");
+    let encoded = img_stegano_rs::image::load_from_memory_with_format(&encoded, image::ImageFormat::Png)
+        .expect("Failed to load image");
+		// save encoded file
+    encoded
+        .save_with_format("out2.png", image::ImageFormat::Png)
+        .expect("Failed to save out2.png");
 
-    println!("Decoded Message: {}", decoded_message);
+		// decode saved encoded file
+    let mut decoded = File::open("out2.png").expect("Failed to open input file");
+    let mut decoded_buffer = Vec::new();
+    decoded.read_to_end(&mut decoded_buffer).unwrap();
+		// decode from buffer
+    let decoded =
+        ImgStegano::decode_from_u8_array(&decoded_buffer).expect("Failed to decode image");
+		println!("{decoded_text}");
+    assert_eq!(decoded, "foo bar".to_string());
 }
+```
+
+Encode and decode from path
+
+```rust
+use img_stegano_rs::ImgStegano;
+
+fn main() {
+		// encode from file path
+    let encoded = ImgStegano::encode_from_path("dice.png", "foo bar")
+        .expect("Failed to encode text to image");
+		// save encoded file
+    encoded
+        .save_with_format("out3.png", img_stegano_rs::image::ImageFormat::Png)
+        .expect("Failed to save image");
+		// decode from saved encoded file path
+    let decoded_text =
+        ImgStegano::decode_from_path("out3.png").expect("Failed to decode text from image");
+		println!("{decoded_text}");
+    assert_eq!(decoded_text, "foo bar".to_string());
+}
+```
+
+Encode and decode from `image`
+
+```rust
+use img_stegano_rs::ImgStegano;
+
+fn main() {
+    let image = open("dice.png").expect("failed to open image");
+    let encoded = ImgStegano::encode_from_image(&image, "foo bar");
+    encoded
+        .save_with_format("out.png", ImageFormat::Png)
+        .expect("Failed to save out.png");
+    let encoded = open("out.png").expect("Failed to open encoded out.png file");
+    let decoded_text = ImgStegano::decode_from_image(&encoded);
+		println!("{decoded_text}");
+    assert_eq!(decoded_text, "foo bar".to_string());
+}
+```
