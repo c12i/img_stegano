@@ -5,9 +5,9 @@ use img_stegano::ImgSteganoError;
 pub enum StaganoCliError {
     #[error("The output image format is invalid")]
     InvalidFormat,
-    #[error("Failed to encode text to image: {0}")]
+    #[error("Failed to encode text to image")]
     EncodeError(#[from] ImgSteganoError),
-    #[error("Failed to decode message from image: {0}")]
+    #[error("Failed to decode message from image")]
     DecodeError(#[source] ImgSteganoError),
     #[error("{0}")]
     Generic(String),
