@@ -42,12 +42,12 @@ impl ImgStegano {
         image_extension: &str,
         message: &str,
     ) -> Result<Vec<u8>, ImgSteganoError> {
-        let image = image::load_from_memory_with_format(input_image, image::ImageFormat::Png)?;
+        let image_format = ImageFormat::from_extension(image_extension)
+            .ok_or(ImgSteganoError::InvalidImageFormat)?;
+        let image = image::load_from_memory_with_format(input_image, image_format)?;
         let encoded_image = Self::encode_from_image(&image, message);
         let mut encoded: Vec<u8> = Vec::new();
         let mut cursor = Cursor::new(&mut encoded);
-        let image_format = ImageFormat::from_extension(image_extension)
-            .ok_or(ImgSteganoError::InvalidImageFormat)?;
         encoded_image.write_to(&mut cursor, image_format)?;
         Ok(encoded)
     }
