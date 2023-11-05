@@ -44,7 +44,7 @@ impl ImgStegano {
     ) -> Result<Vec<u8>, ImgSteganoError> {
         let image_format = ImageFormat::from_extension(image_extension)
             .ok_or(ImgSteganoError::InvalidImageFormat)?;
-        let image = image::load_from_memory_with_format(input_image, image_format)?;
+        let image = image::load_from_memory(input_image)?;
         let encoded_image = Self::encode_from_image(image.into(), message);
         let Image(encoded_image) = encoded_image;
         let mut encoded: Vec<u8> = Vec::new();
@@ -92,7 +92,7 @@ impl ImgStegano {
     }
 
     pub fn decode_from_u8_array(input_image: &[u8]) -> Result<String, ImgSteganoError> {
-        let image = image::load_from_memory_with_format(input_image, image::ImageFormat::Png)?;
+        let image = image::load_from_memory(input_image)?;
         let decoded = Self::decode_from_image(&image.into());
         Ok(decoded)
     }
