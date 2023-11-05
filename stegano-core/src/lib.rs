@@ -108,8 +108,8 @@ impl ImgStegano {
 pub struct Image(DynamicImage);
 
 impl Image {
-    pub fn open(path: &str) -> Result<Self, ImgSteganoError> {
-        let image = image::open(path)?;
+    pub fn open<P: Into<PathBuf>>(path: P) -> Result<Self, ImgSteganoError> {
+        let image = image::open(path.into())?;
         Ok(Image(image))
     }
 
@@ -118,8 +118,12 @@ impl Image {
         Ok(Image(image))
     }
 
-    pub fn save(&self, path: &str, format: ImageFormat) -> Result<(), ImgSteganoError> {
-        self.0.save_with_format(path, format)?;
+    pub fn save<P: Into<PathBuf>>(
+        &self,
+        path: P,
+        format: ImageFormat,
+    ) -> Result<(), ImgSteganoError> {
+        self.0.save_with_format(path.into(), format)?;
         Ok(())
     }
 }
