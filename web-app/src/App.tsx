@@ -23,7 +23,10 @@ import Nav from './components/Nav'
 import { getAsByteArray } from './utils/files'
 
 const App = () => {
-  const {acceptedFiles, getRootProps, getInputProps} = useDropzone({multiple: false})
+  const {acceptedFiles, getRootProps, getInputProps} = useDropzone({
+    accept: {'image/png': ['.png']},
+    multiple: false,
+  })
   const [encodedImage, setEncodedImage] = useState<Uint8Array>()
   const [decodedText, setDecodedText] = useState<string>('')
   const [action, setAction] = useState<string>('encode')
@@ -35,11 +38,11 @@ const App = () => {
     import("../pkg").then(mod => {
       getAsByteArray(acceptedFiles[0]).then(buf => {
         setEncodedImage(
-          mod.encode_text(buf, acceptedFiles[0].type.split('/')[1], decodedText)
+          mod.encode_text(buf, acceptedFiles[0].type.split('/')[1], value)
         )
       })
     })
-  }, [acceptedFiles, decodedText])
+  }, [acceptedFiles, value])
   const decodeText = useCallback(() => {
     import("../pkg").then(mod => {
       getAsByteArray(acceptedFiles[0]).then(buf => {
@@ -49,9 +52,9 @@ const App = () => {
   }, [setDecodedText, acceptedFiles])
   const imageUrl = useMemo(() => {
     if (!encodedImage) return
-    const blob = new Blob([encodedImage.buffer])
+    const blob = new Blob([encodedImage.buffer], {type: acceptedFiles[0]?.type})
     return URL.createObjectURL(blob)
-  }, [encodedImage])
+  }, [acceptedFiles, encodedImage])
   const files = acceptedFiles.map((file: any) => (
     <Tag key={file.path}>{file.path}</Tag>
   ))
@@ -74,6 +77,7 @@ const App = () => {
           onChange={a => {
             setAction(a)
             setDecodedText('')
+            setEncodedImage(undefined)
           }}
           value={action}
         >
