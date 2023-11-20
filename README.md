@@ -110,7 +110,7 @@ fn main() {
 You can interact with this program in your command line by installing via cargo:
 
 ```sh
-cargo install --git https://github.com/collinsmuriuki/img_stegano.git
+cargo install --git https://github.com/c12i/img_stegano.git
 ```
 
 Encode:
