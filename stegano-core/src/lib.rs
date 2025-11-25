@@ -131,7 +131,7 @@ pub fn decode_from_path<T: Into<PathBuf>>(image_path: T) -> Result<String, ImgSt
 }
 
 /// Calculate the maximum message capacity (in bytes) for an image
-fn calculate_capacity(width: u32, height: u32) -> usize {
+pub fn calculate_capacity(width: u32, height: u32) -> usize {
     // Each pixel has 3 RGB channels, each can store 1 bit
     // Divide by 8 to get bytes, subtract 1 for null terminator
     ((width as usize * height as usize * 3) / 8).saturating_sub(1)
