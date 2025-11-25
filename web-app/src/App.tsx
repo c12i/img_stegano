@@ -19,7 +19,7 @@ const App = () => {
   const [acceptedFile, setAcceptedFile] = useState<File | null>(null);
   const [encodedImage, setEncodedImage] = useState<Uint8Array>();
   const [decodedText, setDecodedText] = useState<string>("");
-  const [mode, setMode] = useState<Mode>("encode");
+  const [mode, setMode] = useState<Mode>(getInitialMode());
   const [message, setMessage] = useState<string>("");
   const [capacity, setCapacity] = useState<number | null>(null);
   const [error, setError] = useState<string>("");
@@ -27,6 +27,10 @@ const App = () => {
   const [wasmReady, setWasmReady] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const wasmModule = useRef<WasmModule | null>(null);
+
+  useEffect(() => {
+    window.location.hash = mode;
+  }, [mode]);
 
   useEffect(() => {
     import("../pkg/img_stegano_wasm")
@@ -126,9 +130,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (acceptedFile && wasmReady) {
-      loadCapacity();
-    }
+    if (!(acceptedFile && wasmReady)) return
+    loadCapacity();
   }, [acceptedFile, wasmReady, loadCapacity]);
 
   return (
@@ -182,6 +185,14 @@ const App = () => {
       <Footer />
     </div>
   );
+};
+
+const getInitialMode = (): Mode => {
+  const hash = window.location.hash.slice(1); 
+  if (hash === "encode" || hash === "decode") {
+    return hash;
+  }
+  return "encode"; 
 };
 
 export default App;
