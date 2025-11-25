@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { FaDownload, FaLock, FaUnlock, FaImage } from "react-icons/fa";
 import { getAsByteArray } from "./utils/files";
 
 type Mode = "encode" | "decode";
+
+// Type for the WASM module
+type WasmModule = typeof import("../pkg/img_stegano_wasm");
 
 const App = () => {
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
@@ -20,13 +23,16 @@ const App = () => {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [wasmReady, setWasmReady] = useState(false);
+  const wasmModule = useRef<WasmModule | null>(null);
 
   // Initialize WASM module on mount
   useEffect(() => {
     import("../pkg/img_stegano_wasm")
-      .then((mod) => {
-        // WASM module loaded
+      .then(async (mod) => {
+        await mod.default();
+        wasmModule.current = mod;
         setWasmReady(true);
+        console.log("WASM module initialized successfully");
       })
       .catch((err) => {
         console.error("Failed to load WASM module:", err);
@@ -35,21 +41,24 @@ const App = () => {
   }, []);
 
   const encodeText = useCallback(async () => {
-    if (!acceptedFiles[0] || !message || !wasmReady) return;
+    if (!acceptedFiles[0] || !message || !wasmReady || !wasmModule.current) return;
 
     setLoading(true);
     setError("");
+    setEncodedImage(undefined); // Clear previous result
 
     try {
-      const mod = await import("../pkg/img_stegano_wasm");
       const buf = await getAsByteArray(acceptedFiles[0]);
-      const result = mod.encode_text(
+      console.log("Encoding message:", message, "buffer size:", buf.length);
+      const result = wasmModule.current.encode_text(
         buf,
         acceptedFiles[0].type.split("/")[1],
         message
       );
+      console.log("Encode result size:", result.length);
       setEncodedImage(result);
     } catch (err: any) {
+      console.error("Encode error:", err);
       setError(err.message || err.toString() || "Failed to encode message");
     } finally {
       setLoading(false);
@@ -57,17 +66,20 @@ const App = () => {
   }, [acceptedFiles, message, wasmReady]);
 
   const decodeText = useCallback(async () => {
-    if (!acceptedFiles[0] || !wasmReady) return;
+    if (!acceptedFiles[0] || !wasmReady || !wasmModule.current) return;
 
     setLoading(true);
     setError("");
+    setDecodedText(""); // Clear previous result
 
     try {
-      const mod = await import("../pkg/img_stegano_wasm");
       const buf = await getAsByteArray(acceptedFiles[0]);
-      const result = mod.decode_text(buf);
+      console.log("Decoding image, buffer size:", buf.length);
+      const result = wasmModule.current.decode_text(buf);
+      console.log("Decode result:", result);
       setDecodedText(result);
     } catch (err: any) {
+      console.error("Decode error:", err);
       setError(err.message || err.toString() || "Failed to decode message");
     } finally {
       setLoading(false);
@@ -75,12 +87,13 @@ const App = () => {
   }, [acceptedFiles, wasmReady]);
 
   const loadCapacity = useCallback(async () => {
-    if (!acceptedFiles[0] || !wasmReady) return;
+    if (!acceptedFiles[0] || !wasmReady || !wasmModule.current) return;
 
     try {
-      const mod = await import("../pkg/img_stegano_wasm");
       const buf = await getAsByteArray(acceptedFiles[0]);
-      const cap = mod.get_image_capacity(buf);
+      console.log("Getting capacity for buffer size:", buf.length);
+      const cap = wasmModule.current.get_image_capacity(buf);
+      console.log("Capacity:", cap);
       setCapacity(cap);
     } catch (err) {
       console.error("Failed to get capacity:", err);
@@ -90,8 +103,8 @@ const App = () => {
 
   const imageUrl = useMemo(() => {
     if (!encodedImage) return;
-    const blob = new Blob([encodedImage.buffer as BlobPart], {
-      type: acceptedFiles[0]?.type,
+    const blob = new Blob([encodedImage as BlobPart], {
+      type: acceptedFiles[0]?.type || "image/png",
     });
     return URL.createObjectURL(blob);
   }, [acceptedFiles, encodedImage]);
@@ -229,10 +242,10 @@ const App = () => {
 
             <button
               onClick={encodeText}
-              disabled={!message || loading || message.length > (capacity || 0)}
+              disabled={!message || loading || !wasmReady || message.length > (capacity || 0)}
               className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
             >
-              {loading ? "Encoding..." : "Encode Message"}
+              {!wasmReady ? "Loading..." : loading ? "Encoding..." : "Encode Message"}
             </button>
           </div>
         )}
@@ -241,10 +254,10 @@ const App = () => {
           <div className="mt-6">
             <button
               onClick={decodeText}
-              disabled={loading}
+              disabled={loading || !wasmReady}
               className="w-full py-3 px-6 bg-green-600 hover:bg-green-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
             >
-              {loading ? "Decoding..." : "Decode Message"}
+              {!wasmReady ? "Loading..." : loading ? "Decoding..." : "Decode Message"}
             </button>
           </div>
         )}
