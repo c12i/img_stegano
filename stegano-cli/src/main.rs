@@ -15,19 +15,11 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    /// Encode text into an image
+    /// Encode text into an image (outputs PNG format)
     Encode {
         /// Input image path
         #[arg(short, long)]
         input: PathBuf,
-
-        /// Output image path
-        #[arg(short, long)]
-        output: PathBuf,
-
-        /// Output image format (e.g., png, jpg)
-        #[arg(short, long)]
-        format: String,
 
         /// Text message to encode
         #[arg(short, long)]
@@ -51,33 +43,36 @@ fn main() -> Result<(), ImgSteganoError> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Encode {
-            input,
-            output,
-            format,
-            message,
-        } => {
-            let image_format =
-                ImageFormat::from_extension(&format).ok_or(ImgSteganoError::InvalidImageFormat)?;
-
+        Commands::Encode { input, message } => {
             println!("Encoding message into image...");
-            let encoded_image = encode_from_path(input, &message)?;
-            encoded_image.save(output.clone(), image_format)?;
-            println!("✓ Text encoded image saved to: {}", output.display());
+            let encoded_image = encode_from_path(&input, &message)?;
+
+            let output = input
+                .file_stem()
+                .and_then(|stem| stem.to_str())
+                .map(|stem| {
+                    let mut path = input.clone();
+                    path.set_file_name(format!("{stem}-encoded.png"));
+                    path
+                })
+                .unwrap_or_else(|| PathBuf::from("encoded.png"));
+
+            encoded_image.save(&output, ImageFormat::Png)?;
+            println!(
+                "✓ Text encoded image saved to: {} (PNG format)",
+                output.display()
+            );
         }
         Commands::Decode { input } => {
             println!("Decoding message from image...");
             let decoded = decode_from_path(input)?;
             println!("✓ Decoded Text:");
-            println!("{}", decoded);
+            println!("{decoded}");
         }
         Commands::Capacity { input } => {
             let image = Image::open(input)?;
             let capacity = image.capacity();
-            println!(
-                "✓ Image capacity: {} bytes (~{} characters)",
-                capacity, capacity
-            );
+            println!("✓ Image capacity: {capacity} bytes (~{capacity} characters)");
         }
     }
     Ok(())

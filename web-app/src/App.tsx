@@ -54,11 +54,7 @@ const App = () => {
 
     try {
       const buf = await getAsByteArray(acceptedFile);
-      const result = wasmModule.current.encode_text(
-        buf,
-        acceptedFile.type.split("/")[1],
-        message
-      );
+      const result = wasmModule.current.encode_text(buf, message);
       setEncodedImage(result);
     } catch (err: any) {
       setError(err.message || err.toString() || "Failed to encode message");

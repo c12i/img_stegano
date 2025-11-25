@@ -56,28 +56,13 @@ pub fn encode_from_image(
     Ok(output_image.into())
 }
 
-pub fn encode_from_u8_array(
-    input_image: &[u8],
-    image_extension: &str,
-    message: &str,
-) -> Result<Vec<u8>, ImgSteganoError> {
-    let image_format =
-        ImageFormat::from_extension(image_extension).ok_or(ImgSteganoError::InvalidImageFormat)?;
-
-    // Warn about lossy formats
-    if is_lossy_format(image_format) {
-        eprintln!(
-            "Warning: {} is a lossy format. Steganography may not work reliably.",
-            image_extension
-        );
-    }
-
+pub fn encode_from_u8_array(input_image: &[u8], message: &str) -> Result<Vec<u8>, ImgSteganoError> {
     let image = image::load_from_memory(input_image)?;
     let encoded_image = encode_from_image(image.into(), message)?;
     let Image(encoded_image) = encoded_image;
     let mut encoded: Vec<u8> = Vec::new();
     let mut cursor = Cursor::new(&mut encoded);
-    encoded_image.write_to(&mut cursor, image_format)?;
+    encoded_image.write_to(&mut cursor, ImageFormat::Png)?;
     Ok(encoded)
 }
 
@@ -135,14 +120,6 @@ pub fn calculate_capacity(width: u32, height: u32) -> usize {
     // Each pixel has 3 RGB channels, each can store 1 bit
     // Divide by 8 to get bytes, subtract 1 for null terminator
     ((width as usize * height as usize * 3) / 8).saturating_sub(1)
-}
-
-/// Check if the image format is lossy (may corrupt steganography data)
-fn is_lossy_format(format: ImageFormat) -> bool {
-    matches!(
-        format,
-        ImageFormat::Jpeg | ImageFormat::WebP | ImageFormat::Avif
-    )
 }
 
 #[derive(Debug, Clone)]
