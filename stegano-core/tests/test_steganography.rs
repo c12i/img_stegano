@@ -3,7 +3,10 @@ use img_stegano_core::{
     calculate_capacity, decode_from_image, decode_from_path, decode_from_u8_array,
     encode_from_image, encode_from_path, encode_from_u8_array, Image, ImageFormat, ImgSteganoError,
 };
-use std::{fs::File, io::Read};
+use std::{
+    fs::File,
+    io::{Cursor, Read},
+};
 
 const SECRET_MESSAGE: &str = "The quick brown fox jumps over the lazy dog";
 
@@ -262,10 +265,15 @@ fn test_invalid_image_format() {
 
 #[test]
 fn test_unsupported_image_extension() {
-    let mut file = File::open("dice.png").expect("failed to open file");
+    // Create a test image and encode it to PNG bytes
+    let img = RgbImage::new(50, 50);
+    let dyn_img = DynamicImage::ImageRgb8(img);
     let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer).unwrap();
+    dyn_img
+        .write_to(&mut Cursor::new(&mut buffer), ImageFormat::Png)
+        .unwrap();
 
+    // Try to encode with unsupported extension
     let result = encode_from_u8_array(&buffer, "xyz", "test");
     assert!(result.is_err());
     match result {
@@ -507,9 +515,9 @@ fn test_different_image_sizes() {
         let message = format!("Testing {}x{}", width, height);
 
         let encoded = encode_from_image(image, &message)
-            .expect(&format!("Failed to encode {}x{}", width, height));
-        let decoded =
-            decode_from_image(&encoded).expect(&format!("Failed to decode {}x{}", width, height));
+            .unwrap_or_else(|_| panic!("Failed to encode {}x{}", width, height));
+        let decoded = decode_from_image(&encoded)
+            .unwrap_or_else(|_| panic!("Failed to decode {}x{}", width, height));
         assert_eq!(decoded, message);
     }
 }

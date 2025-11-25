@@ -1,8 +1,62 @@
 version: 2
 updates:
-- package-ecosystem: cargo
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "08:00"
-  open-pull-requests-limit: 10
+  # Rust dependencies - Core
+  - package-ecosystem: "cargo"
+    directory: "/stegano-core"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "rust"
+
+  # Rust dependencies - CLI
+  - package-ecosystem: "cargo"
+    directory: "/stegano-cli"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "rust"
+
+  # Rust dependencies - WASM
+  - package-ecosystem: "cargo"
+    directory: "/stegano-wasm"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "rust"
+
+  # NPM dependencies - Web App
+  - package-ecosystem: "npm"
+    directory: "/web-app"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+    groups:
+      # Group React-related updates
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      # Group Vite-related updates
+      vite:
+        patterns:
+          - "vite*"
+          - "@vitejs/*"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"

@@ -1,8 +1,6 @@
 # img_stegano
 Image steganography with Rust
 
-⚠️ This is still highly experimental, not recommended for use due to potential bugs ⚠️
-
 ## Introduction
 
 This Rust program allows you to hide a text message within an image using the Least Significant Bit (LSB) replacement technique. The LSB replacement technique involves altering the least significant bits of the image's pixels to encode the hidden message. This technique is a form of steganography, which is the practice of concealing one piece of information within another.
@@ -126,4 +124,4 @@ img_stegano_cli decode --input "out.png"
 ```
 
 ## License
-This library is licensed under the [MIT License](./LICENSE). Feel free to contribute, report issues, or suggest improvements. Enjoy using ImgStegano for image steganography!
+This project is licensed under the [MIT License](./LICENSE). Feel free to contribute, report issues, or suggest improvements. Enjoy using ImgStegano for image steganography!

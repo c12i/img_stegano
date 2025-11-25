@@ -1,3 +1,37 @@
+# Rust
 /target
 /Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# Node / Web App
+web-app/node_modules/
+web-app/dist/
+web-app/.yarn/
+web-app/yarn-error.log
+web-app/.pnp.*
+
+# WASM
+stegano-wasm/pkg/
+*.wasm
+
+# Test outputs
+stegano-core/*.png
+stegano-core/out*.png
+stegano-core/test_*.png
+stegano-cli/*.png
+stegano-cli/out*.png
+stegano-cli/test_*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+
+# OS
+Thumbs.db
+.Spotlight-V100
+.Trashes

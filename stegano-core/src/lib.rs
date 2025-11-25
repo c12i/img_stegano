@@ -40,11 +40,11 @@ pub fn encode_from_image(
         for x in 0..width {
             let pixel = output_image.get_pixel(x, y);
             let mut rgb = pixel.to_rgb().0;
-            for i in 0..rgb.len() {
+            for channel in &mut rgb {
                 if bit_index < message_bits.len() {
                     // clear the last bit with OxFE as the bitmask
                     // set the message_bits[i] at the cleared LSB
-                    rgb[i] = (rgb[i] & 0xFE) | message_bits[bit_index];
+                    *channel = (*channel & 0xFE) | message_bits[bit_index];
                     bit_index += 1;
                 } else {
                     break 'outer;
