@@ -28,8 +28,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
-          cache-dependency-path: web-app/yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Yarn
+        run: corepack prepare yarn@4.10.3 --activate
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -58,7 +62,7 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Install web app dependencies
-        run: cd web-app && yarn install --frozen-lockfile
+        run: cd web-app && yarn install --immutable
 
       - name: Build WASM and Web App
         run: cd web-app && GITHUB_PAGES=true yarn build
