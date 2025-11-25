@@ -17,7 +17,7 @@ const Header = ({ onAboutClick }: HeaderProps) => {
                 img_stegano
               </h1>
               <p className="text-xs text-[#00d4ff] font-mono">
-                [LSB STEGANOGRAPHY SYSTEM v1.0]
+                [LSB REPLACEMENT STEGANOGRAPHY]
               </p>
             </div>
           </div>

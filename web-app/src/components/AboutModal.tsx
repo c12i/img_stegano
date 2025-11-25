@@ -10,8 +10,8 @@ const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0f1419] border-2 border-[#00ff88] rounded-lg shadow-2xl scanline">
-        <div className="sticky top-0 bg-[#0f1419] border-b border-[#00ff88]/30 p-6 flex items-center justify-between">
+      <div className="relative w-full max-w-3xl max-h-[90vh] flex flex-col bg-[#0f1419] border-2 border-[#00ff88] rounded-lg shadow-2xl scanline">
+        <div className="flex-shrink-0 bg-[#0f1419] border-b border-[#00ff88]/30 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-[#00ff88] text-shadow-glow">
             [ABOUT] LSB Steganography
           </h2>
@@ -23,7 +23,7 @@ const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
           </button>
         </div>
 
-        <div className="p-6 space-y-6 text-gray-300 font-mono text-sm">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-gray-300 font-mono text-sm">
           <section>
             <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
               <span className="text-[#00ff88]">{'>'}</span> What is Steganography?
@@ -71,7 +71,7 @@ const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
           </section>
         </div>
 
-        <div className="sticky bottom-0 bg-[#0f1419] border-t border-[#00ff88]/30 p-4 text-center">
+        <div className="flex-shrink-0 bg-[#0f1419] border-t border-[#00ff88]/30 p-4 text-center">
           <button
             onClick={onClose}
             className="px-6 py-2 bg-[#00ff88] hover:bg-[#00d4ff] text-black font-bold rounded transition-colors"
