@@ -94,7 +94,7 @@ jobs:
         run: cd stegano-cli && cargo build --release --verbose
 
       - name: Upload CLI artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cli-${{ matrix.os }}
           path: |
@@ -120,7 +120,7 @@ jobs:
         run: cd stegano-wasm && wasm-pack build --target web
 
       - name: Upload WASM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: wasm-pkg
           path: stegano-wasm/pkg/
@@ -153,7 +153,7 @@ jobs:
         run: cd web-app && yarn build
 
       - name: Upload web app artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: web-app-dist
           path: web-app/dist/
