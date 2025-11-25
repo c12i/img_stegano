@@ -1,0 +1,88 @@
+import { FaTimes } from "react-icons/fa";
+
+interface AboutModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0f1419] border-2 border-[#00ff88] rounded-lg shadow-2xl scanline">
+        <div className="sticky top-0 bg-[#0f1419] border-b border-[#00ff88]/30 p-6 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-[#00ff88] text-shadow-glow">
+            [ABOUT] LSB Steganography
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-[#00d4ff] hover:text-[#00ff88] transition-colors"
+          >
+            <FaTimes size={24} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6 text-gray-300 font-mono text-sm">
+          <section>
+            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
+              <span className="text-[#00ff88]">{'>'}</span> What is Steganography?
+            </h3>
+            <p className="leading-relaxed">
+              Steganography is the practice of concealing messages within other non-secret data.
+              Unlike encryption which makes data unreadable, steganography hides the very existence
+              of the message. The word comes from Greek: <span className="text-[#00ff88]">steganos</span> (covered)
+              and <span className="text-[#00ff88]">graphein</span> (writing).
+            </p>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
+              <span className="text-[#00ff88]">{'>'}</span> LSB (Least Significant Bit) Technique
+            </h3>
+            <p className="leading-relaxed mb-3">
+              This tool uses LSB steganography to hide text messages in images. Here's how it works:
+            </p>
+            <div className="bg-black/40 border border-[#00ff88]/20 rounded p-4 space-y-3">
+              <div>
+                <span className="text-[#00ff88]">1.</span> Each pixel in an image has RGB color channels (Red, Green, Blue)
+              </div>
+              <div>
+                <span className="text-[#00ff88]">2.</span> Each channel is an 8-bit value (0-255)
+              </div>
+              <div>
+                <span className="text-[#00ff88]">3.</span> We modify only the <span className="text-[#00d4ff] font-bold">least significant bit</span> of each channel
+              </div>
+              <div>
+                <span className="text-[#00ff88]">4.</span> This creates imperceptible changes to the human eye
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
+              <span className="text-[#00ff88]">{'>'}</span> Implementation
+            </h3>
+            <p className="leading-relaxed">
+              This tool is built with <span className="text-[#00ff88]">Rust</span> (core library) 
+              and compiled to <span className="text-[#00d4ff]">WebAssembly</span> for browser execution.
+              All processing happens locally in your browser - no data is sent to any server.
+            </p>
+          </section>
+        </div>
+
+        <div className="sticky bottom-0 bg-[#0f1419] border-t border-[#00ff88]/30 p-4 text-center">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 bg-[#00ff88] hover:bg-[#00d4ff] text-black font-bold rounded transition-colors"
+          >
+            [CLOSE]
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AboutModal;
+
