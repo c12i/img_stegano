@@ -9,13 +9,13 @@ const SECRET_MESSAGE: &str = "The quick brown fox jumps over the lazy dog";
 #[test]
 fn test_encode_and_decode_from_image() {
     let image = Image::open("dice.png").expect("failed to open image");
-    let encoded = encode_from_image(image, SECRET_MESSAGE);
+    let encoded = encode_from_image(image, SECRET_MESSAGE).expect("Failed to encode message");
     encoded
         .save("out.png", ImageFormat::Png)
         .expect("Failed to save out.png");
     let encoded = Image::open("out.png").expect("Failed to open image");
-    let decoded_text = decode_from_image(&encoded);
-    assert_eq!(&decoded_text, SECRET_MESSAGE,);
+    let decoded_text = decode_from_image(&encoded).expect("Failed to decode message");
+    assert_eq!(&decoded_text, SECRET_MESSAGE);
 }
 
 #[test]
@@ -44,5 +44,5 @@ fn test_encode_and_decode_from_path() {
         .save("out3.png", ImageFormat::Png)
         .expect("Failed to save out3.png");
     let decoded_text = decode_from_path("out3.png").expect("Failed to decode text from image");
-    assert_eq!(decoded_text, "foo bar".to_string());
+    assert_eq!(decoded_text, "foo bar");
 }
