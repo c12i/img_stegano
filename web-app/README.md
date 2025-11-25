@@ -1,27 +1,55 @@
-# React + TypeScript + Vite
+# img_stegano Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern web application for hiding and revealing secret messages in images using steganography.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Encode**: Hide secret messages in PNG and JPEG images
+- **Decode**: Extract hidden messages from images
+- **Capacity Indicator**: Shows how much data can be hidden in an image
+- **Modern UI**: Built with Tailwind CSS and React
+- **Fast**: Powered by WebAssembly for near-native performance
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **React** + **TypeScript** - UI framework
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **WebAssembly** - Core steganography engine (Rust)
+- **react-dropzone** - File upload
 
-- Configure the top-level `parserOptions` property like this:
+## Development
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```bash
+# Install dependencies
+yarn install
+
+# Start dev server (automatically builds WASM if needed)
+yarn dev
+
+# Build for production (includes WASM build)
+yarn build
+
+# Preview production build
+yarn preview
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## How It Works
+
+The app uses LSB (Least Significant Bit) steganography to hide messages in the RGB channels of image pixels. Each pixel can store 3 bits of data (1 bit per color channel), making the changes imperceptible to the human eye.
+
+**Important**: Use lossless formats like PNG for best results. JPEG compression may corrupt hidden messages.
+
+## Project Structure
+
+```
+web-app/
+├── src/
+│   ├── App.tsx           # Main application component
+│   ├── main.tsx          # Entry point
+│   ├── index.css         # Tailwind CSS imports
+│   └── utils/
+│       └── files.ts      # File handling utilities
+├── pkg/                  # WASM module (generated)
+└── dist/                 # Production build (generated)
+```
