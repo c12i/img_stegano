@@ -31,11 +31,11 @@ use img_stegano::{encode_from_image, decode_from_image, Image, image::ImageForma
 
 fn main() {
     let image = Image::open("dice.png").expect("Failed to open image");
-    let encoded = encode_from_image(image, "foo bar");
+    let encoded = encode_from_image(image, "foo bar").expect("Failed to encode");
     encoded.save("out.png", ImageFormat::Png).expect("Failed to save image");
 
     let encoded = Image::open("out.png").expect("Failed to open image");
-    let decoded_text = decode_from_image(&encoded);
+    let decoded_text = decode_from_image(&encoded).expect("Failed to decode");
     assert_eq!(decoded_text, "foo bar");
 }
 ```
