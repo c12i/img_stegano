@@ -7,7 +7,9 @@ interface FileDropzoneProps {
 
 const FileDropzone = ({ onFileAccepted }: FileDropzoneProps) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { "image/png": [".png"], "image/jpeg": [".jpg", ".jpeg"] },
+    accept: {
+      "image/png": [".png"]
+    },
     multiple: false,
     onDrop: (acceptedFiles) => {
       if (acceptedFiles[0]) {
@@ -33,7 +35,10 @@ const FileDropzone = ({ onFileAccepted }: FileDropzoneProps) => {
           : "[DROP IMAGE OR CLICK TO SELECT]"}
       </p>
       <p className="text-sm text-[#00d4ff] font-mono">
-        SUPPORTED: PNG, JPEG
+        PNG ONLY
+      </p>
+      <p className="text-xs text-gray-500 font-mono mt-2">
+        (Other formats may not preserve LSB data reliably)
       </p>
     </div>
   );

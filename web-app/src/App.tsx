@@ -170,7 +170,12 @@ const App = () => {
 
         <ErrorDisplay error={error} />
 
-        {encodedImage && imageUrl && <EncodedResult imageUrl={imageUrl} />}
+        {encodedImage && imageUrl && acceptedFile && (
+          <EncodedResult
+            imageUrl={imageUrl}
+            originalFileName={acceptedFile.name}
+          />
+        )}
         {decodedText && <DecodedResult decodedText={decodedText} />}
       </main>
 

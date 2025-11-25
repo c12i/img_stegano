@@ -61,10 +61,36 @@ const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
 
           <section>
             <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
+              <span className="text-[#00ff88]">{'>'}</span> Why PNG Only?
+            </h3>
+            <p className="leading-relaxed mb-3">
+              This tool <span className="text-[#00ff88] font-bold">only supports PNG images</span> for reliable LSB steganography:
+            </p>
+            <div className="bg-black/40 border border-[#00ff88]/20 rounded p-4 space-y-3">
+              <div>
+                <span className="text-[#00ff88] font-bold">✓ PNG:</span> Lossless compression, preserves exact pixel values
+              </div>
+              <div>
+                <span className="text-red-400 font-bold">✗ JPEG/WebP:</span> Lossy compression destroys LSB data
+              </div>
+              <div>
+                <span className="text-yellow-400 font-bold">⚠ BMP/TIFF:</span> Technically lossless but have format-specific quirks that can corrupt LSB data during encoding/decoding cycles
+              </div>
+            </div>
+            <p className="leading-relaxed mt-3 text-sm">
+              <span className="text-[#00d4ff] font-bold">Technical Details:</span> While BMP and TIFF are lossless,
+              they use different internal representations (padding, byte ordering, color spaces) that may not preserve
+              RGB pixel data identically through the image library's encoding/decoding pipeline. PNG's widespread
+              support and standardized format makes it the most reliable choice for LSB steganography.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
               <span className="text-[#00ff88]">{'>'}</span> Implementation
             </h3>
             <p className="leading-relaxed">
-              This tool is built with <span className="text-[#00ff88]">Rust</span> (core library) 
+              This tool is built with <span className="text-[#00ff88]">Rust</span> (core library)
               and compiled to <span className="text-[#00d4ff]">WebAssembly</span> for browser execution.
               All processing happens locally in your browser - no data is sent to any server.
             </p>
