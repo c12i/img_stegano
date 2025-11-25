@@ -116,6 +116,15 @@ const App = () => {
     setError("");
   };
 
+  const handleClearFile = () => {
+    setAcceptedFile(null);
+    setDecodedText("");
+    setEncodedImage(undefined);
+    setError("");
+    setMessage("");
+    setCapacity(null);
+  };
+
   useEffect(() => {
     if (acceptedFile && wasmReady) {
       loadCapacity();
@@ -136,6 +145,7 @@ const App = () => {
             fileName={acceptedFile.name}
             fileSize={acceptedFile.size}
             capacity={capacity}
+            onClear={handleClearFile}
           />
         )}
 
