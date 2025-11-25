@@ -27,14 +27,14 @@ img_stegano = {git = "https://github.com/collinsmuriuki/img_stegano.git"}
 `encode_from_image`: Encode and decode from an `Image` struct
 
 ```rust,no_run
-use img_stegano::{ImgStegano, Image, image::ImageFormat};
+use img_stegano::{encode_from_image, decode_from_image, Image, image::ImageFormat};
 
 fn main() {
     // open image
     let image = Image::open("dice.png").expect("Failed to open image");
 
     // encode message to image
-    let encoded = ImgStegano::encode_from_image(image, "foo bar");
+    let encoded = encode_from_image(image, "foo bar");
 
     // save text encoded image
     encoded.save("out.png", ImageFormat::Png).expect("Failed to save out.png");
@@ -43,7 +43,7 @@ fn main() {
     let encoded = Image::open("out.png").expect("Failed to open encoded out.png file");
 
     // decode text from image
-    let decoded_text = ImgStegano::decode_from_image(&encoded);
+    let decoded_text = decode_from_image(&encoded);
     println!("{decoded_text}");
     assert_eq!(decoded_text, "foo bar".to_string());
 }
@@ -53,7 +53,7 @@ fn main() {
 
 ```rust,no_run
 use std::{fs::File, io::Read};
-use img_stegano::{ImgStegano, Image, image::ImageFormat};
+use img_stegano::{encode_from_u8_array, decode_from_u8_array, Image, image::ImageFormat};
 
 fn main() {
     // Load the input image
@@ -62,7 +62,7 @@ fn main() {
     file.read_to_end(&mut buffer).unwrap();
 
     // encode from buffer
-    let encoded = ImgStegano::encode_from_u8_array(&buffer, "png", "foo bar").expect("Failed to encode message to image");
+    let encoded = encode_from_u8_array(&buffer, "png", "foo bar").expect("Failed to encode message to image");
     
     // save text encoded image
     let encoded = Image::open_from_u8_array(&encoded, ImageFormat::Png).expect("Failed to load image");
@@ -76,7 +76,7 @@ fn main() {
     decoded.read_to_end(&mut decoded_buffer).unwrap();
 
     // decode encoded text from image buffer
-    let decoded_text = ImgStegano::decode_from_u8_array(&decoded_buffer).expect("Failed to decode image");
+    let decoded_text = decode_from_u8_array(&decoded_buffer).expect("Failed to decode image");
     println!("{decoded_text}");
     assert_eq!(decoded_text, "foo bar".to_string());
 }
@@ -85,11 +85,11 @@ fn main() {
 `encode_from_path`: Encode and decode from path
 
 ```rust,no_run
-use img_stegano::{ImgStegano, Image, image::ImageFormat};
+use img_stegano::{encode_from_path, decode_from_path, Image, image::ImageFormat};
 
 fn main() {
     // encode from file path
-    let encoded = ImgStegano::encode_from_path("dice.png", "foo bar").expect("Failed to encode text to image");
+    let encoded = encode_from_path("dice.png", "foo bar").expect("Failed to encode text to image");
 
     // save text encoded image
     encoded
@@ -97,7 +97,7 @@ fn main() {
         .expect("Failed to save image");
 
     // decode saved text encoded image from its path
-    let decoded_text = ImgStegano::decode_from_path("out3.png").expect("Failed to decode text from image");
+    let decoded_text = decode_from_path("out3.png").expect("Failed to decode text from image");
     println!("{decoded_text}");
     assert_eq!(decoded_text, "foo bar".to_string());
 }

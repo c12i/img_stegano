@@ -1,14 +1,25 @@
-name: Security audit
+name: Security Audit (Daily)
+
 on:
   schedule:
+    # Run daily at midnight UTC
     - cron: '0 0 * * *'
+  workflow_dispatch:
+
 jobs:
   audit:
+    name: Security Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --ignore RUSTSEC-2020-0159 RUSTSEC-2020-0071 RUSTSEC-2021-0141
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run cargo audit
+        run: cargo audit
         continue-on-error: true
