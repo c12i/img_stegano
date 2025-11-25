@@ -30,22 +30,13 @@ img_stegano = {git = "https://github.com/collinsmuriuki/img_stegano.git"}
 use img_stegano::{encode_from_image, decode_from_image, Image, image::ImageFormat};
 
 fn main() {
-    // open image
     let image = Image::open("dice.png").expect("Failed to open image");
-
-    // encode message to image
     let encoded = encode_from_image(image, "foo bar");
+    encoded.save("out.png", ImageFormat::Png).expect("Failed to save image");
 
-    // save text encoded image
-    encoded.save("out.png", ImageFormat::Png).expect("Failed to save out.png");
-
-    // open text encoded image
-    let encoded = Image::open("out.png").expect("Failed to open encoded out.png file");
-
-    // decode text from image
+    let encoded = Image::open("out.png").expect("Failed to open image");
     let decoded_text = decode_from_image(&encoded);
-    println!("{decoded_text}");
-    assert_eq!(decoded_text, "foo bar".to_string());
+    assert_eq!(decoded_text, "foo bar");
 }
 ```
 
@@ -56,50 +47,34 @@ use std::{fs::File, io::Read};
 use img_stegano::{encode_from_u8_array, decode_from_u8_array, Image, image::ImageFormat};
 
 fn main() {
-    // Load the input image
-    let mut file = File::open("dice.png").expect("failed to open file");
+    let mut file = File::open("dice.png").expect("Failed to open file");
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).unwrap();
 
-    // encode from buffer
-    let encoded = encode_from_u8_array(&buffer, "png", "foo bar").expect("Failed to encode message to image");
-    
-    // save text encoded image
-    let encoded = Image::open_from_u8_array(&encoded, ImageFormat::Png).expect("Failed to load image");
-    encoded
-        .save("out2.png", ImageFormat::Png)
-        .expect("Failed to save out2.png");
+    let encoded = encode_from_u8_array(&buffer, "png", "foo bar").expect("Failed to encode");
+    let image = Image::open_from_u8_array(&encoded, ImageFormat::Png).expect("Failed to load image");
+    image.save("out2.png", ImageFormat::Png).expect("Failed to save image");
 
-    // open saved text encoded image
-    let mut decoded = File::open("out2.png").expect("Failed to open input file");
-    let mut decoded_buffer = Vec::new();
-    decoded.read_to_end(&mut decoded_buffer).unwrap();
+    let mut file = File::open("out2.png").expect("Failed to open file");
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).unwrap();
 
-    // decode encoded text from image buffer
-    let decoded_text = decode_from_u8_array(&decoded_buffer).expect("Failed to decode image");
-    println!("{decoded_text}");
-    assert_eq!(decoded_text, "foo bar".to_string());
+    let decoded_text = decode_from_u8_array(&buffer).expect("Failed to decode");
+    assert_eq!(decoded_text, "foo bar");
 }
 ```
 
 `encode_from_path`: Encode and decode from path
 
 ```rust,no_run
-use img_stegano::{encode_from_path, decode_from_path, Image, image::ImageFormat};
+use img_stegano::{encode_from_path, decode_from_path, image::ImageFormat};
 
 fn main() {
-    // encode from file path
-    let encoded = encode_from_path("dice.png", "foo bar").expect("Failed to encode text to image");
+    let encoded = encode_from_path("dice.png", "foo bar").expect("Failed to encode");
+    encoded.save("out3.png", ImageFormat::Png).expect("Failed to save image");
 
-    // save text encoded image
-    encoded
-        .save("out3.png", ImageFormat::Png)
-        .expect("Failed to save image");
-
-    // decode saved text encoded image from its path
-    let decoded_text = decode_from_path("out3.png").expect("Failed to decode text from image");
-    println!("{decoded_text}");
-    assert_eq!(decoded_text, "foo bar".to_string());
+    let decoded_text = decode_from_path("out3.png").expect("Failed to decode");
+    assert_eq!(decoded_text, "foo bar");
 }
 ```
 
