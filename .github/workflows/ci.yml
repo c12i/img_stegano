@@ -138,6 +138,12 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Yarn
+        run: corepack prepare yarn@4.10.3 --activate
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -147,7 +153,7 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Install dependencies
-        run: cd web-app && yarn install --frozen-lockfile
+        run: cd web-app && yarn install --immutable
 
       - name: Build web app
         run: cd web-app && yarn build
@@ -158,3 +164,18 @@ jobs:
           name: web-app-dist
           path: web-app/dist/
 
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Run cargo-tarpaulin
+        run: cargo tarpaulin --workspace --timeout 300 --out xml --engine llvm
