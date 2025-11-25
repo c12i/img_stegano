@@ -25,9 +25,7 @@ const Footer = () => {
               <span className="hidden sm:inline">[c12i.xyz]</span>
             </a>
           </div>
-          <p className="text-gray-500 font-mono text-xs">
-            [POWERED BY RUST + WASM] • [LSB STEGANOGRAPHY] • [OPEN SOURCE]
-          </p>
+          <p className="text-gray-500 font-mono text-xs">[POWERED BY RUST + WASM]</p>
         </div>
       </div>
     </footer>
