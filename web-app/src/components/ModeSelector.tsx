@@ -37,4 +37,3 @@ const ModeSelector = ({ mode, onModeChange }: ModeSelectorProps) => {
 };
 
 export default ModeSelector;
-

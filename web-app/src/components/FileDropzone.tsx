@@ -8,7 +8,7 @@ interface FileDropzoneProps {
 const FileDropzone = ({ onFileAccepted }: FileDropzoneProps) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      "image/png": [".png"]
+      "image/png": [".png"],
     },
     multiple: false,
     onDrop: (acceptedFiles) => {
@@ -34,9 +34,7 @@ const FileDropzone = ({ onFileAccepted }: FileDropzoneProps) => {
           ? "[RECEIVING FILE...]"
           : "[DROP IMAGE OR CLICK TO SELECT]"}
       </p>
-      <p className="text-sm text-[#00d4ff] font-mono">
-        PNG ONLY
-      </p>
+      <p className="text-sm text-[#00d4ff] font-mono">PNG ONLY</p>
       <p className="text-xs text-gray-500 font-mono mt-2">
         (Other formats may not preserve LSB data reliably)
       </p>
@@ -45,4 +43,3 @@ const FileDropzone = ({ onFileAccepted }: FileDropzoneProps) => {
 };
 
 export default FileDropzone;
-

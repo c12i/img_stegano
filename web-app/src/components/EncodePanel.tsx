@@ -22,7 +22,7 @@ const EncodePanel = ({
     <div className="mt-6 space-y-4">
       <div>
         <label className="block text-sm font-bold text-[#00ff88] mb-2 font-mono flex items-center gap-2">
-          <span className="text-[#00d4ff]">{'>'}</span>
+          <span className="text-[#00d4ff]">{">"}</span>
           SECRET MESSAGE
         </label>
         <textarea
@@ -52,12 +52,11 @@ const EncodePanel = ({
         {!wasmReady
           ? "[INITIALIZING...]"
           : loading
-          ? "[ENCODING...]"
-          : "[EXECUTE ENCODE]"}
+            ? "[ENCODING...]"
+            : "[EXECUTE ENCODE]"}
       </button>
     </div>
   );
 };
 
 export default EncodePanel;
-

@@ -16,4 +16,3 @@ const ErrorDisplay = ({ error }: ErrorDisplayProps) => {
 };
 
 export default ErrorDisplay;
-

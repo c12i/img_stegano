@@ -15,12 +15,11 @@ const DecodePanel = ({ loading, wasmReady, onDecode }: DecodePanelProps) => {
         {!wasmReady
           ? "[INITIALIZING...]"
           : loading
-          ? "[DECODING...]"
-          : "[EXECUTE DECODE]"}
+            ? "[DECODING...]"
+            : "[EXECUTE DECODE]"}
       </button>
     </div>
   );
 };
 
 export default DecodePanel;
-

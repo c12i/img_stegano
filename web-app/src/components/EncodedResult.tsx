@@ -7,7 +7,7 @@ interface EncodedResultProps {
 
 const EncodedResult = ({ imageUrl, originalFileName }: EncodedResultProps) => {
   const getEncodedFileName = (originalName: string) => {
-    const lastDotIndex = originalName.lastIndexOf('.');
+    const lastDotIndex = originalName.lastIndexOf(".");
     if (lastDotIndex === -1) {
       return `${originalName}-encoded.png`;
     }
@@ -18,7 +18,7 @@ const EncodedResult = ({ imageUrl, originalFileName }: EncodedResultProps) => {
   return (
     <div className="mt-6 p-6 bg-[#0f1419] rounded-lg border-2 border-[#00ff88]">
       <h3 className="text-lg font-bold text-[#00ff88] mb-4 font-mono flex items-center gap-2">
-        <span className="text-[#00d4ff]">{'>'}</span>
+        <span className="text-[#00d4ff]">{">"}</span>
         [ENCODING COMPLETE]
       </h3>
       <div className="flex flex-col md:flex-row gap-6 items-center">
@@ -41,4 +41,3 @@ const EncodedResult = ({ imageUrl, originalFileName }: EncodedResultProps) => {
 };
 
 export default EncodedResult;
-

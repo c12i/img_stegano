@@ -14,7 +14,7 @@ const Logo = ({ className = "w-10 h-10" }: { className?: string }) => {
         fill="none"
         className="animate-pulse"
       />
-      
+
       {/* Inner hexagon */}
       <path
         d="M50 15 L75 30 L75 70 L50 85 L25 70 L25 30 Z"
@@ -22,7 +22,7 @@ const Logo = ({ className = "w-10 h-10" }: { className?: string }) => {
         strokeWidth="1.5"
         fill="rgba(0, 255, 136, 0.05)"
       />
-      
+
       {/* Eye symbol */}
       <ellipse
         cx="50"
@@ -33,16 +33,10 @@ const Logo = ({ className = "w-10 h-10" }: { className?: string }) => {
         strokeWidth="2"
         fill="none"
       />
-      
+
       {/* Pupil */}
-      <circle
-        cx="50"
-        cy="50"
-        r="6"
-        fill="#00ff88"
-        className="animate-pulse"
-      />
-      
+      <circle cx="50" cy="50" r="6" fill="#00ff88" className="animate-pulse" />
+
       {/* Binary digits scattered around */}
       <text
         x="35"
@@ -84,7 +78,7 @@ const Logo = ({ className = "w-10 h-10" }: { className?: string }) => {
       >
         00
       </text>
-      
+
       {/* Gradients */}
       <defs>
         <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -102,4 +96,3 @@ const Logo = ({ className = "w-10 h-10" }: { className?: string }) => {
 };
 
 export default Logo;
-

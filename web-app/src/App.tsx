@@ -126,7 +126,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (!(acceptedFile && wasmReady)) return
+    if (!(acceptedFile && wasmReady)) return;
     loadCapacity();
   }, [acceptedFile, wasmReady, loadCapacity]);
 
@@ -184,12 +184,11 @@ const App = () => {
 };
 
 const getInitialMode = (): Mode => {
-  const hash = window.location.hash.slice(1); 
+  const hash = window.location.hash.slice(1);
   if (hash === "encode" || hash === "decode") {
     return hash;
   }
-  return "encode"; 
+  return "encode";
 };
 
 export default App;
-

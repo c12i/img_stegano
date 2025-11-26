@@ -20,7 +20,7 @@ const FileInfo = ({ fileName, fileSize, capacity, onClear }: FileInfoProps) => {
       <div className="flex items-center justify-between">
         <div className="font-mono">
           <p className="font-bold text-[#00ff88] flex items-center gap-2">
-            <span className="text-[#00d4ff]">{'>'}</span>
+            <span className="text-[#00d4ff]">{">"}</span>
             {fileName}
           </p>
           <p className="text-sm text-gray-400 mt-1">
@@ -42,4 +42,3 @@ const FileInfo = ({ fileName, fileSize, capacity, onClear }: FileInfoProps) => {
 };
 
 export default FileInfo;
-

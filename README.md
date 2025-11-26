@@ -1,4 +1,5 @@
 # img_stegano
+
 Image steganography with Rust
 
 ## Introduction
@@ -88,4 +89,5 @@ img_stegano_cli capacity --input "dice.png"
 ```
 
 ## License
+
 This project is licensed under the [MIT License](./LICENSE). Feel free to contribute, report issues, or suggest improvements. Enjoy using ImgStegano for image steganography!

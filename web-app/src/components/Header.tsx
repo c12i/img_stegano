@@ -35,4 +35,3 @@ const Header = ({ onAboutClick }: HeaderProps) => {
 };
 
 export default Header;
-
