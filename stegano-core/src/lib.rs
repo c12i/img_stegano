@@ -1,119 +1,14 @@
+mod decode;
+mod encode;
 mod error;
 
-use std::{io::Cursor, path::PathBuf};
+use std::path::PathBuf;
 
+pub use decode::*;
+pub use encode::*;
 pub use error::ImgSteganoError;
 pub use image::ImageFormat;
-use image::{DynamicImage, GenericImage, GenericImageView, Pixel, Rgb};
-
-pub fn encode_from_image(
-    Image(input_image): Image,
-    message: &str,
-) -> Result<Image, ImgSteganoError> {
-    // Validate message is not empty
-    if message.is_empty() {
-        return Err(ImgSteganoError::EmptyMessage);
-    }
-
-    let (width, height) = input_image.dimensions();
-    let capacity = calculate_capacity(width, height);
-    let message_bytes = message.as_bytes();
-
-    // Validate message fits in image
-    if message_bytes.len() > capacity {
-        return Err(ImgSteganoError::MessageTooLarge {
-            required: message_bytes.len(),
-            available: capacity,
-        });
-    }
-
-    let mut output_image = input_image.clone();
-    let mut message_bits = message_bytes
-        .iter()
-        .flat_map(|byte| (0..8).rev().map(move |i| (byte >> i) & 1))
-        .collect::<Vec<u8>>();
-    // adding message termination, to mark the end of a message
-    message_bits.extend(vec![0; 8]);
-    let mut bit_index = 0;
-
-    'outer: for y in 0..height {
-        for x in 0..width {
-            let pixel = output_image.get_pixel(x, y);
-            let mut rgb = pixel.to_rgb().0;
-            for channel in &mut rgb {
-                if bit_index < message_bits.len() {
-                    // clear the last bit with OxFE as the bitmask
-                    // set the message_bits[i] at the cleared LSB
-                    *channel = (*channel & 0xFE) | message_bits[bit_index];
-                    bit_index += 1;
-                } else {
-                    break 'outer;
-                }
-            }
-            output_image.put_pixel(x, y, Rgb(rgb).to_rgba());
-        }
-    }
-    Ok(output_image.into())
-}
-
-pub fn encode_from_u8_array(input_image: &[u8], message: &str) -> Result<Vec<u8>, ImgSteganoError> {
-    let image = image::load_from_memory(input_image)?;
-    let encoded_image = encode_from_image(image.into(), message)?;
-    let Image(encoded_image) = encoded_image;
-    let mut encoded: Vec<u8> = Vec::new();
-    let mut cursor = Cursor::new(&mut encoded);
-    encoded_image.write_to(&mut cursor, ImageFormat::Png)?;
-    Ok(encoded)
-}
-
-pub fn encode_from_path<T: Into<PathBuf>>(
-    image_path: T,
-    message: &str,
-) -> Result<Image, ImgSteganoError> {
-    let image = image::open(image_path.into())?;
-    let encoded_image = encode_from_image(image.into(), message)?;
-    Ok(encoded_image)
-}
-
-pub fn decode_from_image(Image(encoded_image): &Image) -> Result<String, ImgSteganoError> {
-    let (width, height) = encoded_image.dimensions();
-    let mut decoded_bytes = Vec::new();
-    let mut current_byte = 0u8;
-    let mut bit_count = 0;
-
-    'outer: for y in 0..height {
-        for x in 0..width {
-            let pixel = encoded_image.get_pixel(x, y);
-            let rgb = pixel.to_rgb().0;
-            for &channel in &rgb {
-                let bit = channel & 1;
-                current_byte = (current_byte << 1) | bit;
-                bit_count += 1;
-                if bit_count == 8 {
-                    if current_byte == 0 {
-                        break 'outer; // End marker
-                    }
-                    decoded_bytes.push(current_byte);
-                    current_byte = 0;
-                    bit_count = 0;
-                }
-            }
-        }
-    }
-
-    // Return proper error for invalid UTF-8 instead of lossy conversion
-    String::from_utf8(decoded_bytes).map_err(|_| ImgSteganoError::InvalidUtf8)
-}
-
-pub fn decode_from_u8_array(input_image: &[u8]) -> Result<String, ImgSteganoError> {
-    let image = image::load_from_memory(input_image)?;
-    decode_from_image(&image.into())
-}
-
-pub fn decode_from_path<T: Into<PathBuf>>(image_path: T) -> Result<String, ImgSteganoError> {
-    let image = image::open(image_path.into())?;
-    decode_from_image(&image.into())
-}
+use image::{DynamicImage, GenericImageView};
 
 /// Calculate the maximum message capacity (in bytes) for an image
 pub fn calculate_capacity(width: u32, height: u32) -> usize {
