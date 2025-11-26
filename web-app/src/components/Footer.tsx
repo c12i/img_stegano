@@ -9,7 +9,7 @@ const Footer = () => {
             <a
               href="https://github.com/c12i/img_stegano"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="flex items-center gap-2 text-[#00ff88] hover:text-[#00d4ff] transition-colors font-mono text-sm group"
             >
               <FaGithub className="text-xl group-hover:scale-110 transition-transform" />
@@ -18,14 +18,15 @@ const Footer = () => {
             <a
               href="https://c12i.xyz"
               target="_blank"
-              rel="noopener noreferrer"
               className="flex items-center gap-2 text-[#00d4ff] hover:text-[#00ff88] transition-colors font-mono text-sm group"
             >
               <FaGlobe className="text-xl group-hover:scale-110 transition-transform" />
               <span className="hidden sm:inline">[c12i.xyz]</span>
             </a>
           </div>
-          <p className="text-gray-500 font-mono text-xs">[POWERED BY RUST + WASM]</p>
+          <p className="text-gray-500 font-mono text-xs">
+            [POWERED BY RUST + WASM]
+          </p>
         </div>
       </div>
     </footer>
@@ -33,4 +34,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
