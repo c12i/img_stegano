@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -42,10 +42,7 @@ jobs:
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Run tests - Core
-        run: cd stegano-core && cargo test --verbose
-
-      - name: Run tests - CLI
-        run: cd stegano-cli && cargo test --verbose
+        run: cargo test --verbose
 
   fmt:
     name: Rustfmt
@@ -91,7 +88,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build CLI
-        run: cd stegano-cli && cargo build --release --verbose
+        run: cd crates/cli && cargo build --release --verbose
 
       - name: Upload CLI artifact
         uses: actions/upload-artifact@v5
@@ -117,7 +114,7 @@ jobs:
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
       - name: Build WASM
-        run: cd stegano-wasm && wasm-pack build --target web
+        run: cd crates/wasm && wasm-pack build --target web
 
       - name: Upload WASM artifact
         uses: actions/upload-artifact@v5
@@ -136,7 +133,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Enable Corepack
         run: corepack enable

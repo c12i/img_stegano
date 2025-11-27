@@ -1,5 +1,5 @@
 use image::{DynamicImage, Rgb, RgbImage};
-use img_stegano_core::{
+use img_stegano::{
     calculate_capacity, decode_from_image, decode_from_path, decode_from_u8_array,
     encode_from_image, encode_from_path, encode_from_u8_array, Image, ImageFormat, ImgSteganoError,
 };
@@ -44,7 +44,7 @@ fn create_checkerboard_image(width: u32, height: u32, square_size: u32) -> Image
 
     for y in 0..height {
         for x in 0..width {
-            let is_white = ((x / square_size) + (y / square_size)) % 2 == 0;
+            let is_white = ((x / square_size) + (y / square_size)).is_multiple_of(2);
             // Clear LSBs for clean encoding
             let color = if is_white {
                 Rgb([254, 254, 254]) // 255 & 0xFE = 254

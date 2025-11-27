@@ -3,7 +3,7 @@ mod error;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
-use img_stegano::{decode_from_path, encode_from_path, image::ImageFormat, Image, ImgSteganoError};
+use img_stegano::{decode_from_path, encode_from_path, Image, ImageFormat, ImgSteganoError};
 
 #[derive(Parser, Debug)]
 #[command(name = "img_stegano_cli")]

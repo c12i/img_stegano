@@ -3,7 +3,7 @@ name: Security Audit (Daily)
 on:
   schedule:
     # Run daily at midnight UTC
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
