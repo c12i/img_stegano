@@ -511,7 +511,8 @@ dependencies = [
 name = "img_stegano"
 version = "0.1.0"
 dependencies = [
- "img_stegano_core",
+ "image",
+ "thiserror",
 ]
 
 [[package]]
@@ -521,14 +522,6 @@ dependencies = [
  "anyhow",
  "clap",
  "img_stegano",
- "thiserror",
-]
-
-[[package]]
-name = "img_stegano_core"
-version = "0.1.0"
-dependencies = [
- "image",
  "thiserror",
 ]
 

@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use crate::Image;
-pub use crate::ImgSteganoError;
+use crate::ImgSteganoError;
 use image::{GenericImageView, Pixel};
 
 pub fn decode_from_image(Image(encoded_image): &Image) -> Result<String, ImgSteganoError> {

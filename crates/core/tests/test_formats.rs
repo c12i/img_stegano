@@ -2,7 +2,7 @@
 // This library only supports PNG for reliable LSB steganography
 
 use image::{DynamicImage, ImageFormat, RgbImage};
-use img_stegano_core::{decode_from_u8_array, encode_from_u8_array};
+use img_stegano::{decode_from_u8_array, encode_from_u8_array};
 use std::io::Cursor;
 
 const TEST_MESSAGE: &str = "Hello World";

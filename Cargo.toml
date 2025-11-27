@@ -1,17 +1,4 @@
-[package]
-name = "img_stegano"
-version = "0.1.0"
-edition = "2021"
-
-[lib]
-path = "./src/lib.rs"
-
 [workspace]
-members = [
-	"stegano-core",
-	"stegano-cli",
-	"stegano-wasm",
-]
+members = ["./crates/core", "./crates/cli", "./crates/wasm"]
+resolver = "2"
 
-[dependencies]
-img_stegano_core = {path = "./stegano-core"}

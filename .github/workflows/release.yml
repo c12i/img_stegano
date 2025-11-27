@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
   workflow_dispatch:
 
 env:
@@ -116,4 +116,3 @@ jobs:
         run: |
           cd stegano-wasm
           cargo publish --token ${{ secrets.CARGO_TOKEN }} || true
-

@@ -1,5 +1,5 @@
 use image::{DynamicImage, Rgb, RgbImage};
-use img_stegano_core::{
+use img_stegano::{
     calculate_capacity, decode_from_image, decode_from_path, decode_from_u8_array,
     encode_from_image, encode_from_path, encode_from_u8_array, Image, ImageFormat, ImgSteganoError,
 };
