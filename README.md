@@ -10,9 +10,9 @@ See [this whitepaper](https://core.ac.uk/download/pdf/235050007.pdf) for referen
 
 ## Features
 
-- **Encoding Functions**: You can use the `encode_from_u8_array`, `encode_from_path` or `encode_from_image` functions to embed a text message into an image using LSB replacement. Always outputs PNG format for reliable steganography.
+- **Encoding Functions**: You can use the `encode_from_u8_array`, `encode_from_path` (or lower level `encode_from_image`) functions to embed a text message into an image using LSB replacement. Always outputs PNG format for reliable steganography.
 
-- **Decoding Functions**: The `decode_from_u8_array`, `decode_from_path`, `decode_from_image` function allows you to extract the hidden message from an encoded image.
+- **Decoding Functions**: The `decode_from_u8_array`, `decode_from_path` (or lower level `decode_from_image`) function allows you to extract the hidden message from an encoded image.
 
 ## Usage
 
