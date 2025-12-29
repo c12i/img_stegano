@@ -5,20 +5,17 @@ use wasm_bindgen::prelude::*;
 
 /// Encode a text message into an image using steganography
 ///
+/// Always outputs PNG format for reliable steganography.
+///
 /// # Arguments
 /// * `input_image` - The image data as a byte array
-/// * `image_extension` - The image format extension (e.g., "png", "jpg")
 /// * `message` - The text message to encode
 ///
 /// # Returns
-/// * `Ok(Vec<u8>)` - The encoded image data
+/// * `Ok(Vec<u8>)` - The encoded image data (PNG format)
 /// * `Err(String)` - Error message if encoding fails
 #[wasm_bindgen]
-pub fn encode_text(
-    input_image: &[u8],
-    image_extension: &str,
-    message: &str,
-) -> Result<Vec<u8>, String> {
+pub fn encode_text(input_image: &[u8], message: &str) -> Result<Vec<u8>, String> {
     utils::set_panic_hook();
 
     if input_image.is_empty() {
@@ -29,8 +26,7 @@ pub fn encode_text(
         return Err("Message is empty".to_string());
     }
 
-    encode_from_u8_array(input_image, image_extension, message)
-        .map_err(|e| format!("Encoding failed: {}", e))
+    encode_from_u8_array(input_image, message).map_err(|e| format!("Encoding failed: {}", e))
 }
 
 /// Decode a text message from an image using steganography
