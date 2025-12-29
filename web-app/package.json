@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "yarn build:wasm && tsc && vite build",
-    "build:wasm": "cd ../stegano-wasm && wasm-pack build --target web --out-dir ../web-app/pkg",
+    "build:wasm": "cd ../crates/wasm && wasm-pack build --target web --out-dir ../../web-app/pkg",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
