@@ -1,12 +1,9 @@
 use image::{DynamicImage, Rgb, RgbImage};
-use img_stegano_core::{
+use img_stegano::{
     calculate_capacity, decode_from_image, decode_from_path, decode_from_u8_array,
     encode_from_image, encode_from_path, encode_from_u8_array, Image, ImageFormat, ImgSteganoError,
 };
-use std::{
-    fs::File,
-    io::{Cursor, Read},
-};
+use std::{fs::File, io::Read};
 
 const SECRET_MESSAGE: &str = "The quick brown fox jumps over the lazy dog";
 
@@ -47,7 +44,7 @@ fn create_checkerboard_image(width: u32, height: u32, square_size: u32) -> Image
 
     for y in 0..height {
         for x in 0..width {
-            let is_white = ((x / square_size) + (y / square_size)) % 2 == 0;
+            let is_white = ((x / square_size) + (y / square_size)).is_multiple_of(2);
             // Clear LSBs for clean encoding
             let color = if is_white {
                 Rgb([254, 254, 254]) // 255 & 0xFE = 254
@@ -98,8 +95,8 @@ fn test_encode_and_decode_from_u8_array() {
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).unwrap();
 
-    let encoded = encode_from_u8_array(&buffer, "png", SECRET_MESSAGE)
-        .expect("Failed to encode message to image");
+    let encoded =
+        encode_from_u8_array(&buffer, SECRET_MESSAGE).expect("Failed to encode message to image");
     let decoded = decode_from_u8_array(&encoded).expect("Failed to decode image");
     assert_eq!(&decoded, SECRET_MESSAGE);
 }
@@ -259,27 +256,8 @@ fn test_near_capacity_message() {
 #[test]
 fn test_invalid_image_format() {
     let buffer = vec![0u8; 100]; // Invalid image data
-    let result = encode_from_u8_array(&buffer, "png", "test");
+    let result = encode_from_u8_array(&buffer, "test");
     assert!(result.is_err());
-}
-
-#[test]
-fn test_unsupported_image_extension() {
-    // Create a test image and encode it to PNG bytes
-    let img = RgbImage::new(50, 50);
-    let dyn_img = DynamicImage::ImageRgb8(img);
-    let mut buffer = Vec::new();
-    dyn_img
-        .write_to(&mut Cursor::new(&mut buffer), ImageFormat::Png)
-        .unwrap();
-
-    // Try to encode with unsupported extension
-    let result = encode_from_u8_array(&buffer, "xyz", "test");
-    assert!(result.is_err());
-    match result {
-        Err(ImgSteganoError::InvalidImageFormat) => (),
-        _ => panic!("Expected InvalidImageFormat error"),
-    }
 }
 
 #[test]
@@ -380,28 +358,6 @@ fn test_all_printable_ascii() {
     let encoded = encode_from_image(image, &message).expect("Failed to encode ASCII");
     let decoded = decode_from_image(&encoded).expect("Failed to decode ASCII");
     assert_eq!(decoded, message);
-}
-
-// ============================================================================
-// Edge Case Tests - Different Image Formats
-// ============================================================================
-
-#[test]
-fn test_jpeg_format_warning() {
-    // Create a test image and save as PNG first
-    let image = create_test_image(50, 50);
-    image
-        .save("test_jpeg_input.png", ImageFormat::Png)
-        .expect("Failed to save");
-
-    let mut file = File::open("test_jpeg_input.png").expect("failed to open file");
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer).unwrap();
-
-    // JPEG is lossy, should still work but with warning
-    let result = encode_from_u8_array(&buffer, "jpg", "test message");
-    // Should succeed but print warning to stderr
-    assert!(result.is_ok());
 }
 
 // ============================================================================
