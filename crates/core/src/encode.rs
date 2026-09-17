@@ -26,7 +26,9 @@ pub fn encode_from_image(
         });
     }
 
-    let mut output_image = input_image.clone();
+    // Normalize to stable RGB channels. Writing modified RGB values back into a
+    // grayscale image converts them to luma and destroys the embedded bits.
+    let mut output_image = image::DynamicImage::ImageRgba8(input_image.to_rgba8());
     let mut message_bits = message_bytes
         .iter()
         .flat_map(|byte| (0..8).rev().map(move |i| (byte >> i) & 1))
