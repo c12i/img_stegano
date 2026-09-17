@@ -1,5 +1,3 @@
-import { FaLock, FaUnlock } from "react-icons/fa";
-
 type Mode = "encode" | "decode";
 
 interface ModeSelectorProps {
@@ -9,28 +7,30 @@ interface ModeSelectorProps {
 
 const ModeSelector = ({ mode, onModeChange }: ModeSelectorProps) => {
   return (
-    <div className="flex gap-4 mb-8">
+    <div className="grid grid-cols-2 border border-[#aaa8ae] bg-[#e7e6e2] p-1" role="tablist" aria-label="Steganography mode">
       <button
         onClick={() => onModeChange("encode")}
-        className={`flex-1 py-4 px-6 rounded-lg font-bold transition-all font-mono border-2 ${
+        role="tab"
+        aria-selected={mode === "encode"}
+        className={`border px-4 py-3 font-technical text-xs font-semibold uppercase transition-all ${
           mode === "encode"
-            ? "bg-[#00ff88]/20 text-[#00ff88] border-[#00ff88] shadow-lg border-glow"
-            : "bg-[#0f1419] text-gray-400 border-gray-700 hover:border-[#00ff88]/50"
+            ? "border-[#3c3b40] bg-[#fdfdfb] text-[#202126]"
+            : "border-transparent text-[#77767d] hover:text-[#202126]"
         }`}
       >
-        <FaLock className="inline mr-2" />
-        [ENCODE]
+        Hide a message
       </button>
       <button
         onClick={() => onModeChange("decode")}
-        className={`flex-1 py-4 px-6 rounded-lg font-bold transition-all font-mono border-2 ${
+        role="tab"
+        aria-selected={mode === "decode"}
+        className={`border px-4 py-3 font-technical text-xs font-semibold uppercase transition-all ${
           mode === "decode"
-            ? "bg-[#00d4ff]/20 text-[#00d4ff] border-[#00d4ff] shadow-lg border-glow"
-            : "bg-[#0f1419] text-gray-400 border-gray-700 hover:border-[#00d4ff]/50"
+            ? "border-[#3c3b40] bg-[#fdfdfb] text-[#202126]"
+            : "border-transparent text-[#77767d] hover:text-[#202126]"
         }`}
       >
-        <FaUnlock className="inline mr-2" />
-        [DECODE]
+        Reveal a message
       </button>
     </div>
   );

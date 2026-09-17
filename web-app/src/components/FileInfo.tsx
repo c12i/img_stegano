@@ -1,4 +1,4 @@
-import { FaTimes } from "react-icons/fa";
+import { FiFile, FiX } from "react-icons/fi";
 
 interface FileInfoProps {
   fileName: string;
@@ -9,34 +9,25 @@ interface FileInfoProps {
 
 const FileInfo = ({ fileName, fileSize, capacity, onClear }: FileInfoProps) => {
   return (
-    <div className="mt-6 p-4 bg-[#0f1419] rounded-lg border-2 border-[#00ff88]/30 relative">
+    <div className="flex items-center gap-4 border border-[#aaa8ae] bg-[#f4f3ef] p-4">
+      <div className="flex h-10 w-10 flex-none items-center justify-center border border-[#a49cdc] bg-[#ebe8ff] text-[#6658d3]">
+        <FiFile size={19} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold text-[#29282e]">{fileName}</p>
+        <div className="mt-1 flex flex-wrap gap-x-3 text-xs text-[#77767d]">
+          <span>{(fileSize / 1024).toFixed(1)} KB</span>
+          {capacity !== null && <span>Up to {capacity.toLocaleString()} characters</span>}
+        </div>
+      </div>
       <button
         onClick={onClear}
-        className="absolute -top-3 -right-3 text-[#00d4ff] hover:text-[#00ff88] transition-colors bg-[#0f1419] rounded-full p-1 border-2 border-[#00ff88]/30 hover:border-[#00ff88]"
+        className="flex h-9 w-9 flex-none items-center justify-center border border-transparent text-[#77767d] transition-colors hover:border-[#aaa8ae] hover:text-[#29282e]"
         title="Remove image"
+        aria-label="Remove image"
       >
-        <FaTimes size={20} />
+        <FiX size={18} />
       </button>
-      <div className="flex items-center justify-between">
-        <div className="font-mono">
-          <p className="font-bold text-[#00ff88] flex items-center gap-2">
-            <span className="text-[#00d4ff]">{">"}</span>
-            {fileName}
-          </p>
-          <p className="text-sm text-gray-400 mt-1">
-            SIZE: {(fileSize / 1024).toFixed(2)} KB
-          </p>
-        </div>
-        {capacity !== null && (
-          <div className="text-right font-mono">
-            <p className="text-sm text-gray-400">CAPACITY</p>
-            <p className="text-2xl font-bold text-[#00ff88] text-shadow-glow">
-              {capacity}
-            </p>
-            <p className="text-xs text-[#00d4ff]">bytes</p>
-          </div>
-        )}
-      </div>
     </div>
   );
 };

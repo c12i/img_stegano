@@ -102,6 +102,12 @@ const App = () => {
     return URL.createObjectURL(blob);
   }, [acceptedFile, encodedImage]);
 
+  useEffect(() => {
+    return () => {
+      if (imageUrl) URL.revokeObjectURL(imageUrl);
+    };
+  }, [imageUrl]);
+
   const handleModeChange = (newMode: Mode) => {
     setMode(newMode);
     setDecodedText("");
@@ -131,51 +137,77 @@ const App = () => {
   }, [acceptedFile, wasmReady, loadCapacity]);
 
   return (
-    <div className="min-h-screen bg-[#0a0e17] binary-bg scanline">
+    <div className="min-h-screen bg-[#e9e9e4] text-[#202126]">
       <AboutModal isOpen={showAbout} onClose={() => setShowAbout(false)} />
       <Header onAboutClick={() => setShowAbout(true)} />
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        <ModeSelector mode={mode} onModeChange={handleModeChange} />
-        <FileDropzone onFileAccepted={handleFileAccepted} />
+      <main className="mx-auto w-full max-w-3xl px-5 py-10 md:px-8 md:py-14">
+        <section className="overflow-hidden border border-[#3c3b40] bg-[#fdfdfb]">
+          <div className="border-b border-[#3c3b40] p-3 sm:p-4">
+            <ModeSelector mode={mode} onModeChange={handleModeChange} />
+          </div>
 
-        {acceptedFile && (
-          <FileInfo
-            fileName={acceptedFile.name}
-            fileSize={acceptedFile.size}
-            capacity={capacity}
-            onClear={handleClearFile}
-          />
-        )}
+          <div className="p-5 sm:p-8">
+            <div className="mb-5 flex items-baseline justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold tracking-[-0.01em]">
+                  Choose an image
+                </h2>
+              </div>
+              <span className="border border-[#b7b5ba] px-2 py-1 font-technical text-[10px] font-medium uppercase text-[#6e6d73]">
+                PNG
+              </span>
+            </div>
 
-        {mode === "encode" && acceptedFile && (
-          <EncodePanel
-            message={message}
-            capacity={capacity}
-            loading={loading}
-            wasmReady={wasmReady}
-            onMessageChange={setMessage}
-            onEncode={encodeText}
-          />
-        )}
+            {acceptedFile ? (
+              <FileInfo
+                fileName={acceptedFile.name}
+                fileSize={acceptedFile.size}
+                capacity={capacity}
+                onClear={handleClearFile}
+              />
+            ) : (
+              <FileDropzone onFileAccepted={handleFileAccepted} />
+            )}
 
-        {mode === "decode" && acceptedFile && (
-          <DecodePanel
-            loading={loading}
-            wasmReady={wasmReady}
-            onDecode={decodeText}
-          />
-        )}
+            {acceptedFile && (
+              <div className="mt-8 border-t border-black/[0.07] pt-7">
+                <div className="mb-5">
+                  <h2 className="text-xl font-semibold tracking-[-0.01em]">
+                    {mode === "encode" ? "Write your message" : "Reveal the message"}
+                  </h2>
+                </div>
 
-        <ErrorDisplay error={error} />
+                {mode === "encode" ? (
+                  <EncodePanel
+                    message={message}
+                    capacity={capacity}
+                    loading={loading}
+                    wasmReady={wasmReady}
+                    onMessageChange={setMessage}
+                    onEncode={encodeText}
+                  />
+                ) : (
+                  <DecodePanel
+                    loading={loading}
+                    wasmReady={wasmReady}
+                    onDecode={decodeText}
+                  />
+                )}
+              </div>
+            )}
 
-        {encodedImage && imageUrl && acceptedFile && (
-          <EncodedResult
-            imageUrl={imageUrl}
-            originalFileName={acceptedFile.name}
-          />
-        )}
-        {decodedText && <DecodedResult decodedText={decodedText} />}
+            <ErrorDisplay error={error} />
+
+            {encodedImage && imageUrl && acceptedFile && (
+              <EncodedResult
+                imageUrl={imageUrl}
+                originalFileName={acceptedFile.name}
+              />
+            )}
+            {decodedText && <DecodedResult decodedText={decodedText} />}
+          </div>
+        </section>
       </main>
 
       <Footer />

@@ -19,27 +19,27 @@ const EncodePanel = ({
   const isDisabled = !message || loading || !wasmReady || isOverCapacity;
 
   return (
-    <div className="mt-6 space-y-4">
+    <div className="space-y-4">
       <div>
-        <label className="block text-sm font-bold text-[#00ff88] mb-2 font-mono flex items-center gap-2">
-          <span className="text-[#00d4ff]">{">"}</span>
-          SECRET MESSAGE
+        <label htmlFor="secret-message" className="mb-2 block text-sm font-medium text-[#45444a]">
+          Message
         </label>
         <textarea
+          id="secret-message"
           value={message}
           onChange={(e) => onMessageChange(e.target.value)}
-          placeholder="Enter your classified message..."
-          className="w-full px-4 py-3 rounded-lg border-2 border-[#00ff88]/30 bg-[#0f1419] text-[#00ff88] placeholder-gray-600 focus:border-[#00ff88] focus:outline-none resize-none font-mono"
-          rows={6}
+          placeholder="Type something only the recipient should see..."
+          className="w-full resize-none border border-[#aaa8ae] bg-white px-4 py-3.5 text-sm leading-6 text-[#29282e] placeholder:text-[#a4a2a8] focus:border-[#6658d3]"
+          rows={5}
         />
-        {message && capacity && (
+        {message && capacity !== null && (
           <p
-            className={`mt-2 text-sm font-mono ${
-              isOverCapacity ? "text-red-500" : "text-[#00d4ff]"
+            className={`mt-2 text-right text-xs ${
+              isOverCapacity ? "font-medium text-[#b74e45]" : "text-[#8a898f]"
             }`}
           >
-            [{message.length} / {capacity} bytes]
-            {isOverCapacity && " - OVERFLOW ERROR!"}
+            {message.length.toLocaleString()} / {capacity.toLocaleString()}
+            {isOverCapacity && " - message is too long"}
           </p>
         )}
       </div>
@@ -47,13 +47,13 @@ const EncodePanel = ({
       <button
         onClick={onEncode}
         disabled={isDisabled}
-        className="w-full py-4 px-6 bg-[#00ff88] hover:bg-[#00d4ff] disabled:bg-gray-700 text-black font-bold rounded-lg transition-all disabled:cursor-not-allowed font-mono text-lg border-2 border-[#00ff88] disabled:border-gray-600"
+        className="w-full border border-[#41369b] bg-[#6658d3] px-6 py-3.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#5749c3] disabled:cursor-not-allowed disabled:border-[#aaa8ae] disabled:bg-[#d2d0d4] disabled:text-[#77767d]"
       >
         {!wasmReady
-          ? "[INITIALIZING...]"
+          ? "Initializing..."
           : loading
-            ? "[ENCODING...]"
-            : "[EXECUTE ENCODE]"}
+            ? "Hiding message..."
+            : "Hide message in image"}
       </button>
     </div>
   );

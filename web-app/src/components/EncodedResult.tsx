@@ -1,4 +1,4 @@
-import { FaDownload } from "react-icons/fa";
+import { FiDownload } from "react-icons/fi";
 
 interface EncodedResultProps {
   imageUrl: string;
@@ -16,25 +16,32 @@ const EncodedResult = ({ imageUrl, originalFileName }: EncodedResultProps) => {
     return `${nameWithoutExt}-encoded${ext}`;
   };
   return (
-    <div className="mt-6 p-6 bg-[#0f1419] rounded-lg border-2 border-[#00ff88]">
-      <h3 className="text-lg font-bold text-[#00ff88] mb-4 font-mono flex items-center gap-2">
-        <span className="text-[#00d4ff]">{">"}</span>
-        [ENCODING COMPLETE]
-      </h3>
-      <div className="flex flex-col md:flex-row gap-6 items-center">
+    <div className="mt-7 border-t border-black/[0.07] pt-7">
+      <div className="mb-5 flex items-center gap-3">
+        <div>
+          <p className="text-lg font-semibold">Encoding complete</p>
+          <p className="text-xs text-[#77767d]">The output contains the embedded message.</p>
+        </div>
+      </div>
+      <div className="flex flex-col gap-5 border border-[#aaa8ae] bg-[#f4f3ef] p-4 sm:flex-row sm:items-center">
         <img
           src={imageUrl}
-          alt="Encoded"
-          className="max-w-xs rounded-lg border-2 border-[#00ff88]/30"
+          alt="Image containing the hidden message"
+          className="h-36 w-full border border-[#aaa8ae] object-cover sm:w-40"
         />
-        <a
-          href={imageUrl}
-          download={getEncodedFileName(originalFileName)}
-          className="flex items-center gap-3 px-8 py-4 bg-[#00ff88] hover:bg-[#00d4ff] text-black font-bold rounded-lg transition-all font-mono text-lg border-2 border-[#00ff88]"
-        >
-          <FaDownload />
-          [DOWNLOAD]
-        </a>
+        <div className="flex-1">
+          <p className="mb-4 text-sm leading-6 text-[#6e6d73]">
+            Download and share this PNG without converting or compressing it.
+          </p>
+          <a
+            href={imageUrl}
+            download={getEncodedFileName(originalFileName)}
+            className="inline-flex items-center gap-2 border border-black bg-[#202126] px-5 py-3 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#38383f]"
+          >
+            <FiDownload size={17} />
+            Download image
+          </a>
+        </div>
       </div>
     </div>
   );

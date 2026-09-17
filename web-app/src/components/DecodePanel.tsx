@@ -6,17 +6,20 @@ interface DecodePanelProps {
 
 const DecodePanel = ({ loading, wasmReady, onDecode }: DecodePanelProps) => {
   return (
-    <div className="mt-6">
+    <div>
+      <p className="mb-5 text-sm leading-6 text-[#6e6d73]">
+        We’ll inspect the image for a message embedded with this tool.
+      </p>
       <button
         onClick={onDecode}
         disabled={loading || !wasmReady}
-        className="w-full py-4 px-6 bg-[#00d4ff] hover:bg-[#00ff88] disabled:bg-gray-700 text-black font-bold rounded-lg transition-all disabled:cursor-not-allowed font-mono text-lg border-2 border-[#00d4ff] disabled:border-gray-600"
+        className="w-full border border-[#41369b] bg-[#6658d3] px-6 py-3.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#5749c3] disabled:cursor-not-allowed disabled:border-[#aaa8ae] disabled:bg-[#d2d0d4] disabled:text-[#77767d]"
       >
         {!wasmReady
-          ? "[INITIALIZING...]"
+          ? "Initializing..."
           : loading
-            ? "[DECODING...]"
-            : "[EXECUTE DECODE]"}
+            ? "Looking for a message..."
+            : "Reveal hidden message"}
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { FaTimes } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 
 interface AboutModalProps {
   isOpen: boolean;
@@ -9,129 +9,71 @@ const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-3xl max-h-[90vh] flex flex-col bg-[#0f1419] border-2 border-[#00ff88] rounded-lg shadow-2xl scanline">
-        <div className="flex-shrink-0 bg-[#0f1419] border-b border-[#00ff88]/30 p-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-[#00ff88] text-shadow-glow">
-            [ABOUT] LSB Steganography
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#202126]/40 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="about-title"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div className="flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden border border-[#3c3b40] bg-[#fdfdfb]">
+        <header className="flex items-center justify-between border-b border-black/[0.07] px-6 py-5">
+          <h2 id="about-title" className="text-xl font-semibold tracking-[-0.01em]">
+            How steganography works
           </h2>
           <button
             onClick={onClose}
-            className="text-[#00d4ff] hover:text-[#00ff88] transition-colors"
+            className="flex h-9 w-9 items-center justify-center border border-transparent text-[#77767d] transition-colors hover:border-[#aaa8ae] hover:text-[#29282e]"
+            aria-label="Close dialog"
           >
-            <FaTimes size={24} />
+            <FiX size={19} />
           </button>
-        </div>
+        </header>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-gray-300 font-mono text-sm">
-          <section>
-            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
-              <span className="text-[#00ff88]">{">"}</span> What is
-              Steganography?
-            </h3>
-            <p className="leading-relaxed">
-              Steganography is the practice of concealing messages within other
-              non-secret data. Unlike encryption which makes data unreadable,
-              steganography hides the very existence of the message. The word
-              comes from Greek: <span className="text-[#00ff88]">steganos</span>{" "}
-              (covered) and <span className="text-[#00ff88]">graphein</span>{" "}
-              (writing).
+        <div className="overflow-y-auto px-6 py-6 text-sm leading-6 text-[#5e5d64] sm:px-8">
+          <p>
+            Steganography conceals a message inside ordinary data. This tool
+            places text in tiny variations in a PNG image, hiding the existence
+            of the message rather than visibly encrypting it.
+          </p>
+
+          <section className="mt-7">
+            <h3 className="font-semibold text-[#29282e]">Least significant bits</h3>
+            <p className="mt-2">
+              Every pixel contains red, green, and blue values. Changing the
+              smallest bit of those values is usually invisible to the eye, but
+              those bits can carry a text message that this tool can read later.
             </p>
           </section>
 
-          <section>
-            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
-              <span className="text-[#00ff88]">{">"}</span> LSB (Least
-              Significant Bit) Technique
-            </h3>
-            <p className="leading-relaxed mb-3">
-              This tool uses LSB steganography to hide text messages in images.
-              Here's how it works:
-            </p>
-            <div className="bg-black/40 border border-[#00ff88]/20 rounded p-4 space-y-3">
-              <div>
-                <span className="text-[#00ff88]">1.</span> Each pixel in an
-                image has RGB color channels (Red, Green, Blue)
-              </div>
-              <div>
-                <span className="text-[#00ff88]">2.</span> Each channel is an
-                8-bit value (0-255)
-              </div>
-              <div>
-                <span className="text-[#00ff88]">3.</span> We modify only the{" "}
-                <span className="text-[#00d4ff] font-bold">
-                  least significant bit
-                </span>{" "}
-                of each channel
-              </div>
-              <div>
-                <span className="text-[#00ff88]">4.</span> This creates
-                imperceptible changes to the human eye
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
-              <span className="text-[#00ff88]">{">"}</span> Why PNG Only?
-            </h3>
-            <p className="leading-relaxed mb-3">
-              This tool{" "}
-              <span className="text-[#00ff88] font-bold">
-                only supports PNG images
-              </span>{" "}
-              for reliable LSB steganography:
-            </p>
-            <div className="bg-black/40 border border-[#00ff88]/20 rounded p-4 space-y-3">
-              <div>
-                <span className="text-[#00ff88] font-bold">✓ PNG:</span>{" "}
-                Lossless compression, preserves exact pixel values
-              </div>
-              <div>
-                <span className="text-red-400 font-bold">✗ JPEG/WebP:</span>{" "}
-                Lossy compression destroys LSB data
-              </div>
-              <div>
-                <span className="text-yellow-400 font-bold">⚠ BMP/TIFF:</span>{" "}
-                Technically lossless but have format-specific quirks that can
-                corrupt LSB data during encoding/decoding cycles
-              </div>
-            </div>
-            <p className="leading-relaxed mt-3 text-sm">
-              <span className="text-[#00d4ff] font-bold">
-                Technical Details:
-              </span>{" "}
-              While BMP and TIFF are lossless, they use different internal
-              representations (padding, byte ordering, color spaces) that may
-              not preserve RGB pixel data identically through the image
-              library's encoding/decoding pipeline. PNG's widespread support and
-              standardized format makes it the most reliable choice for LSB
-              steganography.
+          <section className="mt-7 border border-[#aaa8ae] bg-[#f3f1ec] p-5">
+            <h3 className="font-semibold text-[#29282e]">Why PNG?</h3>
+            <p className="mt-2">
+              PNG uses lossless compression, so the hidden bits remain intact.
+              JPEG and WebP compression can alter those bits and destroy the
+              message.
             </p>
           </section>
 
-          <section>
-            <h3 className="text-lg font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
-              <span className="text-[#00ff88]">{">"}</span> Implementation
-            </h3>
-            <p className="leading-relaxed">
-              This tool is built with{" "}
-              <span className="text-[#00ff88]">Rust</span> (core library) and
-              compiled to <span className="text-[#00d4ff]">WebAssembly</span>{" "}
-              for browser execution. All processing happens locally in your
-              browser - no data is sent to any server.
+          <section className="mt-7">
+            <h3 className="font-semibold text-[#29282e]">Your files stay local</h3>
+            <p className="mt-2">
+              The Rust engine runs through WebAssembly in your browser. Images
+              and messages are never uploaded to a server.
             </p>
           </section>
         </div>
 
-        <div className="flex-shrink-0 bg-[#0f1419] border-t border-[#00ff88]/30 p-4 text-center">
+        <footer className="border-t border-black/[0.07] px-6 py-4 text-right">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-[#00ff88] hover:bg-[#00d4ff] text-black font-bold rounded transition-colors"
+            className="border border-[#41369b] bg-[#6658d3] px-5 py-2.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#5749c3]"
           >
-            [CLOSE]
+            Close
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   );
