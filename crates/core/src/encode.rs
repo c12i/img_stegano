@@ -42,16 +42,18 @@ pub fn encode_from_image(
             let pixel = output_image.get_pixel(x, y);
             let mut rgb = pixel.to_rgb().0;
             for channel in &mut rgb {
-                if bit_index < message_bits.len() {
-                    // clear the last bit with OxFE as the bitmask
-                    // set the message_bits[i] at the cleared LSB
-                    *channel = (*channel & 0xFE) | message_bits[bit_index];
-                    bit_index += 1;
-                } else {
-                    break 'outer;
+                if bit_index == message_bits.len() {
+                    break;
                 }
+                // clear the last bit with OxFE as the bitmask
+                // set the message_bits[i] at the cleared LSB
+                *channel = (*channel & 0xFE) | message_bits[bit_index];
+                bit_index += 1;
             }
             output_image.put_pixel(x, y, Rgb(rgb).to_rgba());
+            if bit_index == message_bits.len() {
+                break 'outer;
+            }
         }
     }
     Ok(output_image.into())

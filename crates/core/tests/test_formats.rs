@@ -89,3 +89,31 @@ fn test_grayscale_png_with_extreme_aspect_ratios() {
         );
     }
 }
+
+#[test]
+fn test_reencoding_png_replaces_previous_message() {
+    let img = create_test_image();
+    let mut buffer = Vec::new();
+    img.write_to(&mut Cursor::new(&mut buffer), ImageFormat::Png)
+        .unwrap();
+
+    for (first_message, second_message) in [
+        ("A much longer message encoded first", "New"),
+        ("Old", "A much longer replacement message"),
+    ] {
+        let first_encoded = encode_from_u8_array(&buffer, first_message)
+            .expect("Failed to encode the first message");
+        assert_eq!(
+            decode_from_u8_array(&first_encoded).expect("Failed to decode the first message"),
+            first_message
+        );
+
+        let second_encoded = encode_from_u8_array(&first_encoded, second_message)
+            .expect("Failed to encode the replacement message");
+        assert_eq!(
+            decode_from_u8_array(&second_encoded)
+                .expect("Failed to decode the replacement message"),
+            second_message
+        );
+    }
+}
