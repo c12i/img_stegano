@@ -1,4 +1,5 @@
 import { FiDownload } from "react-icons/fi";
+import { useState } from "react";
 
 interface EncodedResultProps {
   imageUrl: string;
@@ -6,15 +7,20 @@ interface EncodedResultProps {
 }
 
 const EncodedResult = ({ imageUrl, originalFileName }: EncodedResultProps) => {
-  const getEncodedFileName = (originalName: string) => {
-    const lastDotIndex = originalName.lastIndexOf(".");
-    if (lastDotIndex === -1) {
-      return `${originalName}-encoded.png`;
-    }
-    const nameWithoutExt = originalName.substring(0, lastDotIndex);
-    const ext = originalName.substring(lastDotIndex);
-    return `${nameWithoutExt}-encoded${ext}`;
-  };
+  const [encodedFileName] = useState(() => {
+    const lastDotIndex = originalFileName.lastIndexOf(".");
+    const nameWithoutExt =
+      lastDotIndex === -1
+        ? originalFileName
+        : originalFileName.substring(0, lastDotIndex);
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .replace(/\.\d{3}Z$/, "Z");
+
+    return `${nameWithoutExt}-encoded-${timestamp}.png`;
+  });
+
   return (
     <div className="mt-7 border-t border-black/[0.07] pt-7">
       <div className="mb-5 flex items-center gap-3">
@@ -35,7 +41,7 @@ const EncodedResult = ({ imageUrl, originalFileName }: EncodedResultProps) => {
           </p>
           <a
             href={imageUrl}
-            download={getEncodedFileName(originalFileName)}
+            download={encodedFileName}
             className="inline-flex items-center gap-2 border border-black bg-[#202126] px-5 py-3 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#38383f]"
           >
             <FiDownload size={17} />
