@@ -22,7 +22,7 @@ const DecodedResult = ({ decodedText }: DecodedResultProps) => {
         </div>
         <button
           onClick={copyMessage}
-          className="inline-flex items-center gap-1.5 border border-transparent px-3 py-2 font-technical text-xs font-semibold uppercase text-[#6658d3] transition-colors hover:border-[#a49cdc] hover:bg-[#f0eeff]"
+          className="inline-flex items-center gap-1.5 border border-transparent px-3 py-2 font-technical text-xs font-semibold uppercase text-[#29282e] transition-colors hover:border-[#aaa8ae] hover:bg-[#eeeeeb]"
         >
           <FiCopy size={15} />
           {copied ? "Copied" : "Copy"}

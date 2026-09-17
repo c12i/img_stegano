@@ -29,7 +29,7 @@ const EncodePanel = ({
           value={message}
           onChange={(e) => onMessageChange(e.target.value)}
           placeholder="Type something only the recipient should see..."
-          className="w-full resize-none border border-[#aaa8ae] bg-white px-4 py-3.5 text-sm leading-6 text-[#29282e] placeholder:text-[#a4a2a8] focus:border-[#6658d3]"
+          className="w-full resize-none border border-[#aaa8ae] bg-white px-4 py-3.5 text-sm leading-6 text-[#29282e] placeholder:text-[#a4a2a8] focus:border-[#202126]"
           rows={5}
         />
         {message && capacity !== null && (
@@ -47,7 +47,7 @@ const EncodePanel = ({
       <button
         onClick={onEncode}
         disabled={isDisabled}
-        className="w-full border border-[#41369b] bg-[#6658d3] px-6 py-3.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#5749c3] disabled:cursor-not-allowed disabled:border-[#aaa8ae] disabled:bg-[#d2d0d4] disabled:text-[#77767d]"
+        className="w-full border border-black bg-[#202126] px-6 py-3.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#3b3b40] disabled:cursor-not-allowed disabled:border-[#aaa8ae] disabled:bg-[#d2d0d4] disabled:text-[#77767d]"
       >
         {!wasmReady
           ? "Initializing..."

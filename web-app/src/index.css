@@ -22,7 +22,7 @@
   a,
   input,
   textarea {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6658d3] focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#202126] focus-visible:ring-offset-2;
   }
 }
 

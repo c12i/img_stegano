@@ -69,7 +69,7 @@ const AboutModal = ({ isOpen, onClose }: AboutModalProps) => {
         <footer className="border-t border-black/[0.07] px-6 py-4 text-right">
           <button
             onClick={onClose}
-            className="border border-[#41369b] bg-[#6658d3] px-5 py-2.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#5749c3]"
+            className="border border-black bg-[#202126] px-5 py-2.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#3b3b40]"
           >
             Close
           </button>

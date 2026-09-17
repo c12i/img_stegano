@@ -23,19 +23,19 @@ const FileDropzone = ({ onFileAccepted }: FileDropzoneProps) => {
       {...getRootProps()}
       className={`group border border-dashed p-8 text-center cursor-pointer transition-all sm:p-10 ${
         isDragActive
-          ? "border-[#6658d3] bg-[#f2f0ff]"
-          : "border-[#cbc9ce] bg-[#faf9f5] hover:border-[#9087db] hover:bg-[#f8f6ff]"
+          ? "border-[#202126] bg-[#eeeeeb]"
+          : "border-[#cbc9ce] bg-[#faf9f5] hover:border-[#67666b] hover:bg-[#f3f3f0]"
       }`}
     >
       <input {...getInputProps()} />
-      <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center border border-[#a49cdc] bg-[#ebe8ff] text-[#6658d3] transition-transform group-hover:-translate-y-0.5">
+      <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center border border-[#aaa8ae] bg-[#e7e6e2] text-[#29282e] transition-transform group-hover:-translate-y-0.5">
         {isDragActive ? <FiUpload size={22} /> : <FiImage size={23} />}
       </div>
       <p className="font-semibold text-[#29282e]">
         {isDragActive ? "Drop it here" : "Drop your image here"}
       </p>
       <p className="mt-1.5 text-sm text-[#77767d]">
-        or <span className="font-medium text-[#6658d3]">browse your files</span>
+        or <span className="font-medium text-[#29282e]">browse your files</span>
       </p>
     </div>
   );

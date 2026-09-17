@@ -13,7 +13,7 @@ const DecodePanel = ({ loading, wasmReady, onDecode }: DecodePanelProps) => {
       <button
         onClick={onDecode}
         disabled={loading || !wasmReady}
-        className="w-full border border-[#41369b] bg-[#6658d3] px-6 py-3.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#5749c3] disabled:cursor-not-allowed disabled:border-[#aaa8ae] disabled:bg-[#d2d0d4] disabled:text-[#77767d]"
+        className="w-full border border-black bg-[#202126] px-6 py-3.5 font-technical text-xs font-semibold uppercase text-white transition-colors hover:bg-[#3b3b40] disabled:cursor-not-allowed disabled:border-[#aaa8ae] disabled:bg-[#d2d0d4] disabled:text-[#77767d]"
       >
         {!wasmReady
           ? "Initializing..."

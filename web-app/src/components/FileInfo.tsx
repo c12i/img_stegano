@@ -10,7 +10,7 @@ interface FileInfoProps {
 const FileInfo = ({ fileName, fileSize, capacity, onClear }: FileInfoProps) => {
   return (
     <div className="flex items-center gap-4 border border-[#aaa8ae] bg-[#f4f3ef] p-4">
-      <div className="flex h-10 w-10 flex-none items-center justify-center border border-[#a49cdc] bg-[#ebe8ff] text-[#6658d3]">
+      <div className="flex h-10 w-10 flex-none items-center justify-center border border-[#aaa8ae] bg-[#e7e6e2] text-[#29282e]">
         <FiFile size={19} />
       </div>
       <div className="min-w-0 flex-1">
