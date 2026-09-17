@@ -18,6 +18,7 @@ type WasmModule = typeof import("../pkg/img_stegano_wasm");
 const App = () => {
   const [acceptedFile, setAcceptedFile] = useState<File | null>(null);
   const [encodedImage, setEncodedImage] = useState<Uint8Array>();
+  const [encodedFileName, setEncodedFileName] = useState("");
   const [decodedText, setDecodedText] = useState<string>("");
   const [mode, setMode] = useState<Mode>(getInitialMode());
   const [message, setMessage] = useState<string>("");
@@ -53,9 +54,14 @@ const App = () => {
     setEncodedImage(undefined);
 
     try {
+      const originalFileName = acceptedFile.name;
       const buf = await getAsByteArray(acceptedFile);
       const result = wasmModule.current.encode_text(buf, message);
       setEncodedImage(result);
+      setEncodedFileName(originalFileName);
+      setAcceptedFile(null);
+      setMessage("");
+      setCapacity(null);
     } catch (err: any) {
       setError(err.message || err.toString() || "Failed to encode message");
     } finally {
@@ -95,12 +101,12 @@ const App = () => {
   }, [acceptedFile, wasmReady]);
 
   const imageUrl = useMemo(() => {
-    if (!encodedImage || !acceptedFile) return;
+    if (!encodedImage) return;
     const blob = new Blob([encodedImage as BlobPart], {
-      type: acceptedFile.type || "image/png",
+      type: "image/png",
     });
     return URL.createObjectURL(blob);
-  }, [acceptedFile, encodedImage]);
+  }, [encodedImage]);
 
   useEffect(() => {
     return () => {
@@ -112,6 +118,7 @@ const App = () => {
     setMode(newMode);
     setDecodedText("");
     setEncodedImage(undefined);
+    setEncodedFileName("");
     setError("");
   };
 
@@ -119,6 +126,7 @@ const App = () => {
     setAcceptedFile(file);
     setDecodedText("");
     setEncodedImage(undefined);
+    setEncodedFileName("");
     setError("");
   };
 
@@ -126,6 +134,7 @@ const App = () => {
     setAcceptedFile(null);
     setDecodedText("");
     setEncodedImage(undefined);
+    setEncodedFileName("");
     setError("");
     setMessage("");
     setCapacity(null);
@@ -199,10 +208,10 @@ const App = () => {
 
             <ErrorDisplay error={error} />
 
-            {encodedImage && imageUrl && acceptedFile && (
+            {encodedImage && imageUrl && encodedFileName && (
               <EncodedResult
                 imageUrl={imageUrl}
-                originalFileName={acceptedFile.name}
+                originalFileName={encodedFileName}
               />
             )}
             {decodedText && <DecodedResult decodedText={decodedText} />}
